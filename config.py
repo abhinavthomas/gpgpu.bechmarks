@@ -8,8 +8,8 @@ LOGS_PATH = BASE_PATH / 'logs'
 RUNLOGS_PATH = BASE_PATH / 'runs'
 KERNELDB_PATH = BASE_PATH / 'kernelDB'
 
-OPENCL_HEADERS_DIR = pathlib.Path('/opt/intel/system_studio_2020/opencl/SDK/include')
-LIBOPENCL_DIR = pathlib.Path('/opt/intel/system_studio_2020/opencl/SDK/lib64')
+OPENCL_HEADERS_DIR = pathlib.Path('/usr/local/cuda/include/CL')
+LIBOPENCL_DIR = pathlib.Path('/usr/local/cuda/lib64')
 
 BENCHMARK_SUITE_NAMES = [
   "amd-app-sdk-3.0",
