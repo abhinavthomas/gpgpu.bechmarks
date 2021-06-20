@@ -1,0 +1,57 @@
+// This file is part of libcecl.
+//
+// Copyright (c) 2016-2020 Chris Cummins.
+//
+// libcecl is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// libcecl is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with libcecl.  If not, see <https://www.gnu.org/licenses/>.
+
+syntax = "proto2";
+
+// Recording of a libcecl executable execution.
+message LibceclExecutableRun {
+  required int64 ms_since_unix_epoch = 1;
+  required int32 returncode = 2;
+  required string cecl_log = 3;
+  required string stdout = 4;
+  required string stderr = 5;
+  repeated OpenClKernelInvocation kernel_invocation = 6;
+  required int64 elapsed_time_ns = 7;
+  repeated string opencl_program_source = 8;
+  repeated string opencl_build_options = 9;
+}
+
+// A single kernel invocation event.
+message OpenClKernelInvocation {
+  required string kernel_name = 1;
+  required int64 global_size = 2;
+  required int64 local_size = 3;
+  required int64 transferred_bytes = 4;
+  required int64 transfer_time_ns = 5;
+  required int64 kernel_time_ns = 6;
+}
+
+message OpenClDevice {
+  // The name of the device, which is a concatenation of the device type,
+  // platform, device, and driver versions.
+  optional string name = 1;
+  optional string platform_name = 2;
+  optional string device_name = 3;
+  optional string driver_version = 4;
+  optional string opencl_version = 5;
+  optional string device_type = 6;
+  optional int32 platform_id = 10;
+  optional int32 device_id = 11;
+  // If true, OpenCL optimizations are enabled (default). If false, OpenCL
+  // optimizations are disabled.
+  optional bool opencl_opt = 12 [default = true];
+}

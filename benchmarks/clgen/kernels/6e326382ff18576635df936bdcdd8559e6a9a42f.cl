@@ -1,0 +1,10 @@
+__kernel void A(__global float* a, __global float* b, __global float* c, const int d) {
+  int e = get_global_id(0);
+
+  if (e < d) {
+    b[e] += 212;
+  }
+  barrier(1);
+  if (c < 2)
+    b[e] = a[e];
+}
