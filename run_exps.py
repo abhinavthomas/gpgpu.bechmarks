@@ -17,7 +17,7 @@
 These seven benchmark suites were responsible for 92% of GPU results published
 in 25 top tier conference papers. For more details, see:
 
-	﻿Cummins, C., Petoumenos, P., Zang, W., & Leather, H. (2017). Synthesizing
+	Cummins, C., Petoumenos, P., Zang, W., & Leather, H. (2017). Synthesizing
 	Benchmarks for Predictive Modeling. In CGO. IEEE.
 
 When executed as a binary, this file runs the selected benchmark suites and
