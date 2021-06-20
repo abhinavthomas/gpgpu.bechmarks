@@ -892,7 +892,7 @@ def main(bmark_suites, gpgpu_envs, repeats, logdir):
     timestamp = int(d.strftime('%s%f')[:-3])
     runlog_path = config.RUNLOGS_PATH / f'gpgpu.{timestamp}.log'
     logging.basicConfig(filename=runlog_path,
-                        filemode='a+', level=logging.DEBUG)
+                        filemode='w', level=logging.DEBUG)
 
     # Get the OpenCL environments.
     envs = all_envs()
@@ -919,6 +919,5 @@ def main(bmark_suites, gpgpu_envs, repeats, logdir):
 
 
 if __name__ == "__main__":
-    env_names = [
-        'CPU|Intel(R) CPU Runtime for OpenCL(TM) Applications|Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz|18.1.0.0920|2.1']
+    env_names = ['GPU|NVIDIA CUDA|Quadro GP100|384.111|1.2']
     main(config.BENCHMARK_SUITE_NAMES, env_names, 1, config.LOGS_PATH)
