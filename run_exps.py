@@ -60,7 +60,7 @@ def all_envs() -> typing.Tuple[libcecl_pb2.OpenClDevice]:
     env1 = libcecl_pb2.OpenClDevice()
     env1.name = 'GPU|NVIDIA CUDA|Quadro GP100|384.111|1.2'
     # env1.name = 'CPU|Intel(R) CPU Runtime for OpenCL(TM) Applications|Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz|18.1.0.0920|2.1'
-    env1.platform_name = 'Intel(R) CPU Runtime for OpenCL(TM) Applications'
+    # env1.platform_name = 'Intel(R) CPU Runtime for OpenCL(TM) Applications'
     env1.platform_name = 'NVIDIA CUDA'
     env1.device_name = 'Quadro GP100'
     env1.driver_version = '384.111'
@@ -891,7 +891,8 @@ def main(bmark_suites, gpgpu_envs, repeats, logdir):
     d = d.replace(microsecond=int(d.microsecond / 1000) * 1000)
     timestamp = int(d.strftime('%s%f')[:-3])
     runlog_path = config.RUNLOGS_PATH / f'gpgpu.{timestamp}.log'
-    logging.basicConfig(filename=runlog_path, level=logging.DEBUG)
+    logging.basicConfig(filename=runlog_path,
+                        filemode='a+', level=logging.DEBUG)
 
     # Get the OpenCL environments.
     envs = all_envs()
