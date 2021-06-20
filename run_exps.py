@@ -287,7 +287,7 @@ class _BenchmarkSuite(object):
         self._observers = None
 
     def __enter__(self) -> pathlib.Path:
-        prefix = f"phd_datasets_benchmarks_gpgpu_{self.name}"
+        prefix = f"benchmarks_gpgpu_{self.name}"
         self._mutable_location = pathlib.Path(tempfile.mkdtemp(prefix=prefix))
         fs.cp(self._input_files, self._mutable_location)
         return self
