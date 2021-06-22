@@ -66,7 +66,7 @@ def compile_flags(opencl_headers=True):
         f'-Wl,-rpath,{config.LIBOPENCL_DIR}',
         '-lOpenCL',
         '-DCL_SILENCE_DEPRECATION',
-        '-lpapi',
+        # '-lpapi',
         '-lcecl', 
         f'-L{LIBCECL_SO.parent}'
   ]
