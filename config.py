@@ -12,13 +12,13 @@ OPENCL_HEADERS_DIR = pathlib.Path('/usr/local/cuda/include/CL')
 LIBOPENCL_DIR = pathlib.Path('/usr/local/cuda/lib64')
 
 BENCHMARK_SUITE_NAMES = [
+  "parboil-0.2",
   "amd-app-sdk-3.0",
+  "clgen",
   "npb-3.3",
   "nvidia-4.2",
-  "parboil-0.2",
   "polybench-gpu-1.0",
   "rodinia-3.1",
   "shoc-1.1.5",
-  "clgen",
 ]
 

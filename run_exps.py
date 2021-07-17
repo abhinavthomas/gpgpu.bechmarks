@@ -221,7 +221,7 @@ def MakeEnv(
             env = os.environ.copy()
             cflags, ldflags = libcecl_run.compile_flags(
                 opencl_headers=opencl_headers)
-            env['CFLAGS'] = ' '.join(cflags) + f' -isystem {d}'
+            env['CFLAGS'] = ' '.join(cflags) + f' -isystem {d}' + f' -std=gnu11'
             env['CXXFLAGS'] = ' '.join(cflags) + f' -isystem {d}'
             env['LDFLAGS'] = ' '.join(ldflags)
 

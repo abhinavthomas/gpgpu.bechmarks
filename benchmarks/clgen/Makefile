@@ -1,5 +1,4 @@
-
-CFLAGS ?= -I/opt/intel/system_studio_2020/opencl/SDK/include -I../../
+CFLAGS ?= -I/usr/local/cuda/include/CL -I../../ -std=c99
 LDFLAGS ?= -L../../ -lOpenCL -lcecl
 default: all
 
