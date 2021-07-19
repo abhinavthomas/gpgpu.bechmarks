@@ -35,6 +35,7 @@ SHIMFILE = config.BASE_PATH / 'opencl-shim.h'
 
 _INCLUDE_RE = re.compile(r'\w*#include ["<](.*)[">]')
 
+
 def clang_cl_args() -> List[str]:
     """
     Get the Clang args to compile OpenCL.
@@ -55,13 +56,14 @@ def clang_cl_args() -> List[str]:
     args = [
         f'-I{config.OPENCL_HEADERS_DIR}',
         '-target', 'nvptx64-nvidia-nvcl',
-        '-ferror-limit=0'
+        '-ferror-limit=0',
         '-xcl'
     ] + ['-Wno-{}'.format(x) for x in disabled_warnings]
 
     args += ['-include', SHIMFILE]
 
     return args
+
 
 def db_connect(pth):
     conn = sqlite3.connect(pth)
@@ -86,6 +88,7 @@ def db_connect(pth):
             UNIQUE(id))'''
         )
     return conn
+
 
 def inline_fs_headers(path: str, stack: List[str]) -> str:
     """
@@ -157,9 +160,9 @@ def file_rewrite(kid, src):
     lines = [line for line in lines if not line.startswith('#')]
     src = '\n'.join(lines)
 
-
     # Clgen rewrite
-    cmd = [CLGEN_REWRITER] + [f'extra-arg={x}' for x in clang_cl_args()] + ['--']
+    cmd = [CLGEN_REWRITER] + \
+        [f'extra-arg={x}' for x in clang_cl_args()] + ['--']
     try:
         process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, text=True, check=True)
@@ -194,6 +197,7 @@ def file_rewrite(kid, src):
 
     return kid, 0, src
 
+
 def split_kernels(src):
     kernels = []
     while len(src) > 0:
@@ -215,12 +219,14 @@ def split_kernels(src):
         src = src[idx+1:]
     return kernels
 
+
 def kernel_rewrite(src):
     src = src.replace('\n', ' ')
     src = src.replace('\t', ' ')
     while '  ' in src:
         src = src.replace('  ', ' ')
     return src
+
 
 def collect_corpus(conn):
     with conn:
@@ -233,7 +239,9 @@ def collect_corpus(conn):
                     conn.commit()
                     print('Failed reading file')
                     raise Exception
-                conn.execute('INSERT OR IGNORE INTO ContentFiles VALUES(?,?)', (pth, contents))
+                conn.execute(
+                    'INSERT OR IGNORE INTO ContentFiles VALUES(?,?)', (str(pth), contents))
+
 
 def preprocess_corpus(conn):
     with conn:
@@ -242,23 +250,18 @@ def preprocess_corpus(conn):
         stmt = 'SELECT id FROM PreprocessedFiles'
         done = set(row[0] for row in conn.execute(stmt))
         todo = kids - done
-
-        jobs = []
         for kid in todo:
             stmt = 'SELECT contents FROM ContentFiles WHERE id=?'
-            src = conn.execute(stmt, (kid,))[0]
-            jobs.append((kid, src))
+            src = conn.execute(stmt, (kid,)).fetchone()[0]
+            kid, status, src = file_rewrite(kid, src)
+            conn.execute('INSERT INTO PreprocessedFiles VALUES(?,?,?)',
+                         (kid, status, src))
 
-    with conn:
-        with Pool(16) as p:
-            for kid, status, src in p.imap_unordered(file_rewrite, jobs):
-                conn.execute('INSERT INTO PreprocessedFiles VALUES(?,?,?)',
-                             (kid, status, src))
 
 def separate_kernels(conn):
     with conn:
         stmt = 'SELECT id, contents FROM PreprocessedFiles WHERE status=0'
-        for kid, src in conn.execute(stmt):
+        for kid, src in conn.execute(stmt).fetchall():
             kernels = split_kernels(src)
             for idx, kernel in enumerate(kernels):
                 kernel = kernel_rewrite(kernel)
@@ -266,9 +269,14 @@ def separate_kernels(conn):
                 conn.execute('INSERT INTO Kernels VALUES(?,?)',
                              (new_kid, kernel))
 
+
 def generate_corpus():
     conn = db_connect(config.KERNELDB_PATH)
     collect_corpus(conn)
     preprocess_corpus(conn)
     separate_kernels(conn)
     conn.close()
+
+
+if __name__ == '__main__':
+    generate_corpus()
