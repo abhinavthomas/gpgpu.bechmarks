@@ -148,6 +148,7 @@ def file_rewrite(kid, src):
         process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
+        print(err)
         return kid, -1, src
 
     lines = process.stdout.split('\n')
