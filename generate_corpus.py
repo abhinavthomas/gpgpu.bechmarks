@@ -243,21 +243,6 @@ def collect_corpus(conn):
                     'INSERT OR IGNORE INTO ContentFiles VALUES(?,?)', (str(pth), contents))
 
 
-# def preprocess_corpus(conn):
-#     with conn:
-#         stmt = 'SELECT id FROM ContentFiles'
-#         kids = set(row[0] for row in conn.execute(stmt))
-#         stmt = 'SELECT id FROM PreprocessedFiles'
-#         done = set(row[0] for row in conn.execute(stmt))
-#         todo = kids - done
-#         for kid in todo:
-#             stmt = 'SELECT contents FROM ContentFiles WHERE id=?'
-#             src = conn.execute(stmt, (kid,)).fetchone()[0]
-#             kid, status, src = file_rewrite(kid, src)
-#             conn.execute('INSERT INTO PreprocessedFiles VALUES(?,?,?)',
-#                          (kid, status, src))
-
-
 def preprocess_corpus(conn):
     with conn:
         stmt = 'SELECT id FROM ContentFiles'
@@ -265,18 +250,12 @@ def preprocess_corpus(conn):
         stmt = 'SELECT id FROM PreprocessedFiles'
         done = set(row[0] for row in conn.execute(stmt))
         todo = kids - done
-
-        jobs = []
         for kid in todo:
             stmt = 'SELECT contents FROM ContentFiles WHERE id=?'
             src = conn.execute(stmt, (kid,)).fetchone()[0]
-            jobs.append((kid, src))
-
-    with conn:
-        with Pool(16) as p:
-            for kid, status, src in p.imap_unordered(file_rewrite, jobs):
-                conn.execute('INSERT INTO PreprocessedFiles VALUES(?,?,?)',
-                             (kid, status, src))
+            kid, status, src = file_rewrite(kid, src)
+            conn.execute('INSERT INTO PreprocessedFiles VALUES(?,?,?)',
+                         (kid, status, src))
 
 
 def separate_kernels(conn):
