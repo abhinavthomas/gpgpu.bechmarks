@@ -66,7 +66,7 @@ def clang_cl_args() -> List[str]:
 
 
 def db_connect(pth):
-    conn = sqlite3.connect(pth)
+    conn = sqlite3.connect(str(pth))
     with conn:
         conn.execute(
             '''CREATE TABLE IF NOT EXISTS ContentFiles (
@@ -145,7 +145,7 @@ def file_rewrite(kid, src):
     cmd = [CLANG_BINARY] + clang_cl_args() + ['-E', '-c', '-', '-o', '-']
     try:
         process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE, text=True, check=True)
+                                 stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
         return kid, -1, src
 
@@ -165,7 +165,7 @@ def file_rewrite(kid, src):
         [f'extra-arg={x}' for x in clang_cl_args()] + ['--']
     try:
         process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE, text=True, check=True)
+                                 stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
         if err.returncode == 204:
             return kid, -2, src
@@ -177,7 +177,7 @@ def file_rewrite(kid, src):
     cmd = [CLANG_FORMAT, f'style={style}']
     try:
         process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE, text=True, check=True)
+                                 stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
         return kid, -3, src
 
