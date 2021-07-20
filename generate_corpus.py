@@ -144,11 +144,9 @@ def file_rewrite(kid, src):
     # Clang preprocess
     cmd = [CLANG_BINARY] + clang_cl_args() + ['-E', '-c', '-', '-o', '-']
     try:
-        print(f"Executing command {cmd}")
-        process = subprocess.run(list(map(str, cmd)), input=src, stdout=subprocess.PIPE,
+        process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
-        print(f"Error: {err}")
         return kid, -1, src
 
     lines = process.stdout.split('\n')
@@ -166,7 +164,7 @@ def file_rewrite(kid, src):
     cmd = [CLGEN_REWRITER] + \
         [f'extra-arg={x}' for x in clang_cl_args()] + ['--']
     try:
-        process = subprocess.run(list(map(str, cmd)), input=src, stdout=subprocess.PIPE,
+        process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
         if err.returncode == 204:
@@ -178,7 +176,7 @@ def file_rewrite(kid, src):
     style = '{BasedOnStyle: Google, DerivePointerAlignment: False, PointerAlignment: Left}'
     cmd = [CLANG_FORMAT, f'style={style}']
     try:
-        process = subprocess.run(list(map(str, cmd)), input=src, stdout=subprocess.PIPE,
+        process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
         return kid, -3, src
@@ -245,6 +243,21 @@ def collect_corpus(conn):
                     'INSERT OR IGNORE INTO ContentFiles VALUES(?,?)', (str(pth), contents))
 
 
+# def preprocess_corpus(conn):
+#     with conn:
+#         stmt = 'SELECT id FROM ContentFiles'
+#         kids = set(row[0] for row in conn.execute(stmt))
+#         stmt = 'SELECT id FROM PreprocessedFiles'
+#         done = set(row[0] for row in conn.execute(stmt))
+#         todo = kids - done
+#         for kid in todo:
+#             stmt = 'SELECT contents FROM ContentFiles WHERE id=?'
+#             src = conn.execute(stmt, (kid,)).fetchone()[0]
+#             kid, status, src = file_rewrite(kid, src)
+#             conn.execute('INSERT INTO PreprocessedFiles VALUES(?,?,?)',
+#                          (kid, status, src))
+
+
 def preprocess_corpus(conn):
     with conn:
         stmt = 'SELECT id FROM ContentFiles'
@@ -252,12 +265,18 @@ def preprocess_corpus(conn):
         stmt = 'SELECT id FROM PreprocessedFiles'
         done = set(row[0] for row in conn.execute(stmt))
         todo = kids - done
+
+        jobs = []
         for kid in todo:
             stmt = 'SELECT contents FROM ContentFiles WHERE id=?'
-            src = conn.execute(stmt, (kid,)).fetchone()[0]
-            kid, status, src = file_rewrite(kid, src)
-            conn.execute('INSERT INTO PreprocessedFiles VALUES(?,?,?)',
-                         (kid, status, src))
+            src = conn.execute(stmt, (kid,))[0]
+            jobs.append((kid, src))
+
+    with conn:
+        with Pool(16) as p:
+            for kid, status, src in p.imap_unordered(file_rewrite, jobs):
+                conn.execute('INSERT INTO PreprocessedFiles VALUES(?,?,?)',
+                             (kid, status, src))
 
 
 def separate_kernels(conn):
