@@ -269,7 +269,7 @@ def preprocess_corpus(conn):
         jobs = []
         for kid in todo:
             stmt = 'SELECT contents FROM ContentFiles WHERE id=?'
-            src = conn.execute(stmt, (kid,))[0]
+            src = conn.execute(stmt, (kid,)).fetchone()[0]
             jobs.append((kid, src))
 
     with conn:
