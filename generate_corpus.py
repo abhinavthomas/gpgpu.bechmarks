@@ -145,10 +145,10 @@ def file_rewrite(kid, src):
     cmd = [CLANG_BINARY] + clang_cl_args() + ['-E', '-c', '-', '-o', '-']
     try:
         print(f"Executing command {cmd}")
-        process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
+        process = subprocess.run(list(map(str, cmd)), input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
-        print(err)
+        print(f"Error: {err}")
         return kid, -1, src
 
     lines = process.stdout.split('\n')
@@ -166,7 +166,7 @@ def file_rewrite(kid, src):
     cmd = [CLGEN_REWRITER] + \
         [f'extra-arg={x}' for x in clang_cl_args()] + ['--']
     try:
-        process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
+        process = subprocess.run(list(map(str, cmd)), input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
         if err.returncode == 204:
@@ -178,7 +178,7 @@ def file_rewrite(kid, src):
     style = '{BasedOnStyle: Google, DerivePointerAlignment: False, PointerAlignment: Left}'
     cmd = [CLANG_FORMAT, f'style={style}']
     try:
-        process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
+        process = subprocess.run(list(map(str, cmd)), input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
         return kid, -3, src
