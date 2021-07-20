@@ -144,6 +144,7 @@ def file_rewrite(kid, src):
     # Clang preprocess
     cmd = [CLANG_BINARY] + clang_cl_args() + ['-E', '-c', '-', '-o', '-']
     try:
+        print(f"Executing command {cmd}")
         process = subprocess.run(cmd, input=src, stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, universal_newlines=True, check=True)
     except subprocess.CalledProcessError as err:
