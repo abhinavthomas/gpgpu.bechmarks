@@ -24,7 +24,7 @@ import subprocess
 import tempfile
 from multiprocessing import Pool
 from typing import List
-
+import json
 import pandas as pd
 from google.protobuf.json_format import MessageToDict
 
@@ -84,7 +84,6 @@ def build_cmd(fname, build_options):
 
 
 def generate_corpus():
-    l = []
     benchmark_results = gpgpu_pb2.BenchmarkRun()
     paths = set(config.LOGS_PATH.rglob('*.pb')) - \
         set(config.LOGS_PATH.rglob('*ERROR.pb'))
@@ -97,6 +96,7 @@ def generate_corpus():
         headers = pathlib.Path('headers')
         for fname in headers.glob('*.h'):
             shutil.copy(fname, basepath)
+        benchmarks = []
         for path in paths:
             try:
                 with open(path, 'rb') as fp:
@@ -128,29 +128,24 @@ def generate_corpus():
                     except subprocess.CalledProcessError as e:
                         #print("error",bmark,e)
                         raise e
-                    for invocation in benchmark_result.get('run').get('kernelInvocation'):
-                        invocation['hostname'] = benchmark_result.get(
-                            'hostname')
-                        invocation['deviceName'] = benchmark_result.get(
-                            'deviceName')
-                        invocation['benchmarkSuite'] = benchmark_result.get(
-                            'benchmarkSuite')
-                        invocation['benchmarkName'] = bmark
-                        invocation['datasetName'] = benchmark_result.get(
-                            'datasetName')
-                        invocation['source'] = source
-                        invocation['build_options'] = build_options
-                        invocation["ir"] = ir
-                        l.append(invocation)
+                    
+                    invocations = list(benchmark_result.get('run').get('kernelInvocation'))
+                    bench_mark = {'build_options': build_options, "ir":  ir, 'source': source, 'invocations': invocations,
+                    'hostname' :benchmark_result.get('hostname'),
+                    'deviceName' : benchmark_result.get('deviceName'),
+                    'benchmarkSuite' : benchmark_result.get('benchmarkSuite'),
+                    'benchmarkName': bmark,
+                    'datasetName': benchmark_result.get('datasetName')}
+                    benchmarks.append(bench_mark)
             except Exception as e:
                 failed.append(str(path))
             else:
                 sucess += 1
     print(f"Total {sucess} sucess out of {len(paths)}")
     print(f"{len(failed)} items failed. And they are: ")
-    return pd.DataFrame(l)
+    return benchmarks
 
 
 if __name__ == '__main__':
-    df = generate_corpus()
-    df.to_parquet('ir_ds.pq')
+    with open('ir_ds.json','w') as fp:
+        json.dumps(generate_corpus())
