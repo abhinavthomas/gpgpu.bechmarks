@@ -112,7 +112,7 @@ def generate_corpus():
                     fname = basepath / f'{bmark}.{idx}.cl'
                     with open(fname, 'w') as fsrc:
                         fsrc.write(source)
-                    
+
                     # Generate the command line for compiling the kernel
                     cmd = build_cmd(fname, build_options)
                     try:
@@ -126,16 +126,18 @@ def generate_corpus():
                             size = len(fin.read())
                             print(f'{fname_out}:\t {size}')
                     except subprocess.CalledProcessError as e:
-                        #print("error",bmark,e)
+                        # print("error",bmark,e)
                         raise e
-                    
-                    invocations = list(benchmark_result.get('run').get('kernelInvocation'))
-                    bench_mark = {'build_options': build_options, "ir":  ir, 'source': source, 'invocations': invocations,
-                    'hostname' :benchmark_result.get('hostname'),
-                    'deviceName' : benchmark_result.get('deviceName'),
-                    'benchmarkSuite' : benchmark_result.get('benchmarkSuite'),
-                    'benchmarkName': bmark,
-                    'datasetName': benchmark_result.get('datasetName')}
+
+                    invocations = [invocation for invocation in benchmark_result.get(
+                        'run').get('kernelInvocation')]
+                    bench_mark = {'build_options': build_options, "ir":  ir,
+                                  'source': source, 'invocations': invocations,
+                                  'hostname': benchmark_result.get('hostname'),
+                                  'deviceName': benchmark_result.get('deviceName'),
+                                  'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
+                                  'benchmarkName': bmark,
+                                  'datasetName': benchmark_result.get('datasetName')}
                     benchmarks.append(bench_mark)
             except Exception as e:
                 failed.append(str(path))
@@ -147,5 +149,5 @@ def generate_corpus():
 
 
 if __name__ == '__main__':
-    with open('ir_ds.json','w') as fp:
-        json.dumps(generate_corpus())
+    with open('ir_ds.json', 'wb') as fp:
+        json.dump(generate_corpus(), fp)
