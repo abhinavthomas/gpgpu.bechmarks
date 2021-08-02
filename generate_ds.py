@@ -31,7 +31,7 @@ from google.protobuf.json_format import MessageToDict
 import config
 import gpgpu_pb2
 
-CLANG_BINARY = '/usr/bin/clang'
+CLANG_BINARY = '/hdd/abhinav/llvm-project/build/bin/clang'
 CLGEN_REWRITER = config.BASE_PATH / 'clgen-rewriter'
 CLANG_FORMAT = config.BASE_PATH / 'clang-format'
 SHIMFILE = config.BASE_PATH / 'opencl-shim.h'
@@ -69,7 +69,7 @@ def clang_cl_args() -> List[str]:
 
 
 _EXT = '.ll'  # change to '.ll' for text format
-_CLANG_BIN = '/usr/local/bin/clang'
+_CLANG_BIN = '/hdd/abhinav/llvm-project/build/bin/clang'
 
 
 def output_file(fname):
@@ -79,7 +79,7 @@ def output_file(fname):
 def build_cmd(fname, build_options):
     fname_out = output_file(fname)
     ext_type = '-S' if _EXT == '.ll' else ''
-    cmd = f'{_CLANG_BIN} -c -x cl -emit-llvm {ext_type} -cl-std=CL2.0 -Xclang -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
+    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
     return cmd.split()
 
 
@@ -112,7 +112,7 @@ def generate_corpus():
                     fname = basepath / f'{bmark}.{idx}.cl'
                     with open(fname, 'w') as fsrc:
                         fsrc.write(source)
-
+                    
                     # Generate the command line for compiling the kernel
                     cmd = build_cmd(fname, build_options)
                     try:
@@ -120,13 +120,14 @@ def generate_corpus():
                         subprocess.run(cmd, check=True)
                         # Read the output file and report its size
                         fname_out = output_file(fname)
+                        print(fname_out)
                         with open(fname_out, 'rb') as fin:
                             ir = fin.read()
                             size = len(fin.read())
                             print(f'{fname_out}:\t {size}')
-                    except subprocess.CalledProcessError:
-                        print(bmark)
-                        break
+                    except subprocess.CalledProcessError as e:
+                        #print("error",bmark,e)
+                        raise e
                     for invocation in benchmark_result.get('run').get('kernelInvocation'):
                         invocation['hostname'] = benchmark_result.get(
                             'hostname')
@@ -146,7 +147,7 @@ def generate_corpus():
             else:
                 sucess += 1
     print(f"Total {sucess} sucess out of {len(paths)}")
-    print(f"{len(failed)} items failed. And they are: ", failed)
+    print(f"{len(failed)} items failed. And they are: ")
     return pd.DataFrame(l)
 
 
