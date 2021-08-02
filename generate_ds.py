@@ -121,7 +121,7 @@ def generate_corpus():
                         # Read the output file and report its size
                         fname_out = output_file(fname)
                         print(fname_out)
-                        with open(fname_out, 'r') as fin:
+                        with open(fname_out, 'rb') as fin:
                             ir = fin.read()
                             size = len(fin.read())
                             print(f'{fname_out}:\t {size}')
@@ -145,11 +145,9 @@ def generate_corpus():
                 sucess += 1
     print(f"Total {sucess} sucess out of {len(paths)}")
     print(f"{len(failed)} items failed. And they are: ")
-    return {'benchmarks': benchmarks}
+    return benchmarks
 
 
 if __name__ == '__main__':
-    data = generate_corpus()
-    print(data['benchmarks'][0])
-    with open('ir_ds.json', 'w') as fp:
-        json.dump(data, fp)
+    with open('ir_ds.json', 'wb') as fp:
+        json.dump(generate_corpus(), fp)
