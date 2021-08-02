@@ -121,7 +121,7 @@ def generate_corpus():
                         # Read the output file and report its size
                         fname_out = output_file(fname)
                         print(fname_out)
-                        with open(fname_out, 'rb') as fin:
+                        with open(fname_out, 'r') as fin:
                             ir = fin.read()
                             size = len(fin.read())
                             print(f'{fname_out}:\t {size}')
@@ -149,5 +149,5 @@ def generate_corpus():
 
 
 if __name__ == '__main__':
-    with open('ir_ds.json', 'wb') as fp:
+    with open('ir_ds.json', 'w') as fp:
         json.dump(generate_corpus(), fp)
