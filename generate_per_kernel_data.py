@@ -32,41 +32,7 @@ import config
 import gpgpu_pb2
 
 CLANG_BINARY = '/hdd/abhinav/llvm-project/build/bin/clang'
-CLGEN_REWRITER = config.BASE_PATH / 'clgen-rewriter'
-CLANG_FORMAT = config.BASE_PATH / 'clang-format'
-SHIMFILE = config.BASE_PATH / 'opencl-shim.h'
-
-_INCLUDE_RE = re.compile(r'\w*#include ["<](.*)[">]')
-
-
-def clang_cl_args() -> List[str]:
-    """
-    Get the Clang args to compile OpenCL.
-
-    Returns
-    -------
-    List[str]
-        Array of args.
-    """
-    # clang warnings to disable
-    disabled_warnings = [
-        'ignored-pragmas',
-        'implicit-function-declaration',
-        'incompatible-library-redeclaration',
-        'macro-redefined',
-    ]
-
-    args = [
-        f'-I{config.OPENCL_HEADERS_DIR}',
-        '-target', 'nvptx64-nvidia-nvcl',
-        '-ferror-limit=0',
-        '-xcl'
-    ] + ['-Wno-{}'.format(x) for x in disabled_warnings]
-
-    args += ['-include', SHIMFILE]
-
-    return args
-
+LLVM_EXTRACT_BINARY = '/hdd/abhinav/llvm-project/build/bin/llvm-extract'
 
 _EXT = '.ll'  # change to '.ll' for text format
 _CLANG_BIN = '/hdd/abhinav/llvm-project/build/bin/clang'
@@ -79,8 +45,14 @@ def output_file(fname):
 def build_cmd(fname, build_options):
     fname_out = output_file(fname)
     ext_type = '-S' if _EXT == '.ll' else ''
-    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
-    return cmd.split()+['-target', 'nvptx64-nvidia-nvcl']
+    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -target nvptx64-nvidia-nvcl -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
+    return cmd.split()
+
+
+def build_cmd_ext(ll_file, funcname, outfilename):
+    ext_type = '-S' if _EXT == '.ll' else ''
+    cmd = f'{LLVM_EXTRACT_BINARY} {ll_file} -func {funcname} {ext_type} -o {outfilename}'
+    return cmd.split()
 
 
 def generate_corpus():
@@ -113,32 +85,33 @@ def generate_corpus():
                     with open(fname, 'w') as fsrc:
                         fsrc.write(source)
 
-                    # Generate the command line for compiling the kernel
-                    cmd = build_cmd(fname, build_options)
-                    try:
-                        # Run and trigger an exception if it is unsuccessful
-                        subprocess.run(cmd, check=True)
-                        # Read the output file and report its size
-                        fname_out = output_file(fname)
-                        print(fname_out)
-                        with open(fname_out, 'r') as fin:
-                            ir = fin.read()
-                            size = len(fin.read())
-                            print(f'{fname_out}:\t {size}')
-                    except subprocess.CalledProcessError as e:
-                        # print("error",bmark,e)
-                        raise e
-
-                    invocations = [invocation for invocation in benchmark_result.get(
-                        'run').get('kernelInvocation')]
-                    bench_mark = {'build_options': build_options, "ir":  ir,
-                                  'source': source, 'invocations': invocations,
-                                  'hostname': benchmark_result.get('hostname'),
-                                  'deviceName': benchmark_result.get('deviceName'),
-                                  'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
-                                  'benchmarkName': bmark,
-                                  'datasetName': benchmark_result.get('datasetName')}
-                    benchmarks.append(bench_mark)
+                    fname_out = output_file(fname)
+                    for invocation in benchmark_result.get('run').get('kernelInvocation'):
+                        kernel_name = invocation.get('kernelName')
+                        exct_output_file = basepath / \
+                            f'{bmark}.{idx}.{kernel_name}.ll'
+                        cmd = build_cmd_ext(
+                            fname_out, kernel_name, exct_output_file)
+                        try:
+                            # Run and trigger an exception if it is unsuccessful
+                            p = subprocess.run(cmd, check=True)
+                            print(exct_output_file)
+                            with open(exct_output_file, 'r') as fin:
+                                ir = fin.read()
+                                size = len(fin.read())
+                                print(f'{exct_output_file}:\t {size}')
+                        except subprocess.CalledProcessError as e:
+                            # print("error",bmark,e)
+                            p.stderr
+                            raise e
+                        bench_mark = {**invocation, 'build_options': build_options,
+                                      "ir":  ir, 'source': source,
+                                      'hostname': benchmark_result.get('hostname'),
+                                      'deviceName': benchmark_result.get('deviceName'),
+                                      'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
+                                      'benchmarkName': bmark,
+                                      'datasetName': benchmark_result.get('datasetName')}
+                        benchmarks.append(bench_mark)
             except Exception as e:
                 failed.append(str(path))
             else:
@@ -149,5 +122,5 @@ def generate_corpus():
 
 
 if __name__ == '__main__':
-    with open('ir_ds.json', 'w') as fp:
-        json.dump(generate_corpus(), fp)
+    df = pd.DataFrame(generate_corpus())
+    df.to_json('ir_ds.json', 'records')
