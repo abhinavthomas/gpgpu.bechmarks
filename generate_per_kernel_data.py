@@ -45,8 +45,8 @@ def output_file(fname):
 def build_cmd(fname, build_options):
     fname_out = output_file(fname)
     ext_type = '-S' if _EXT == '.ll' else ''
-    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -target nvptx64-nvidia-nvcl -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
-    return cmd.split()
+    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
+    return cmd.split()+["-target", "nvptx64-nvidia-nvcl"]
 
 
 def build_cmd_ext(ll_file, funcname, outfilename):
@@ -100,11 +100,11 @@ def generate_corpus():
                         kernel_name = invocation.get('kernelName')
                         exct_output_file = basepath / \
                             f'{bmark}.{idx}.{kernel_name}.ll'
-                        cmd = build_cmd_ext(
+                        cmd_ext = build_cmd_ext(
                             fname_out, kernel_name, exct_output_file)
                         try:
                             # Run and trigger an exception if it is unsuccessful
-                            p = subprocess.run(cmd, check=True)
+                            p = subprocess.run(cmd_ext, check=True)
                             print(exct_output_file)
                             with open(exct_output_file, 'r') as fin:
                                 ir = fin.read()

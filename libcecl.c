@@ -688,6 +688,48 @@ cl_program CECL_PROGRAM_WITH_SOURCE(cl_context context, cl_uint count,
     fprintf(stderr, "unknown error code!\n");
   exit(E_CL_FAILURE);
 }
+cl_program CECL_PROGRAM_WITH_BINARY(cl_context context, cl_uint num_devices,
+                                    const cl_device_id *device_list,
+                                    const char **strings, const size_t *lengths,
+                                    cl_int *err)
+{
+  cl_int local_err;
+  cl_uint i;
+  cl_program p =
+      clCreateProgramWithBinary(context, num_devices, device_list, strings, NULL, NULL);
+
+  fprintf(stderr,
+          "\n[CECL] clCreateProgramWithSource\n"
+          "[CECL] BEGIN PROGRAM SOURCE\n");
+  fprintf(stderr, "\n[CECL] END PROGRAM SOURCE\n");
+
+  if (local_err == CL_SUCCESS)
+  {
+    if (err)
+    {
+      *err = local_err;
+    }
+
+    return p;
+  }
+  /* error: fatal */
+  fprintf(stderr,
+          "\n[CECL] ERROR: clCreateProgramWithSource() failed! "
+          "Cause: ");
+  if (local_err == CL_INVALID_CONTEXT)
+    fprintf(stderr, "context is not a valid context.\n");
+  else if (local_err == CL_INVALID_VALUE)
+    fprintf(stderr,
+            "count is zero or if strings or any entry in strings "
+            "is NULL.\n");
+  else if (local_err == CL_OUT_OF_HOST_MEMORY)
+    fprintf(stderr,
+            "there is a failure to allocate resources required "
+            "by the OpenCL implementation on the host.\n");
+  else
+    fprintf(stderr, "unknown error code!\n");
+  exit(E_CL_FAILURE);
+}
 
 cl_int cecl_program(cl_program program, cl_uint num_devices,
                     const cl_device_id *device_list, const char *options,
