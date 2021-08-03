@@ -79,8 +79,8 @@ def output_file(fname):
 def build_cmd(fname, build_options):
     fname_out = output_file(fname)
     ext_type = '-S' if _EXT == '.ll' else ''
-    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -target nvptx64-nvidia-nvcl -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
-    return cmd.split()
+    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
+    return cmd.split()+['-target', 'nvptx64-nvidia-nvcl']
 
 
 def generate_corpus():
