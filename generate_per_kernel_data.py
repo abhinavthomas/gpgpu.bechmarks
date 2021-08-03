@@ -84,8 +84,18 @@ def generate_corpus():
                     fname = basepath / f'{bmark}.{idx}.cl'
                     with open(fname, 'w') as fsrc:
                         fsrc.write(source)
+                    # Generate the command line for compiling the kernel
+                    cmd = build_cmd(fname, build_options)
+                    try:
+                        # Run and trigger an exception if it is unsuccessful
+                        p = subprocess.run(cmd, check=True)
+                        # Read the output file and report its size
+                        fname_out = output_file(fname)
+                    except subprocess.CalledProcessError as e:
+                        # print("error",bmark,e)
+                        p.stderr
+                        raise e
 
-                    fname_out = output_file(fname)
                     for invocation in benchmark_result.get('run').get('kernelInvocation'):
                         kernel_name = invocation.get('kernelName')
                         exct_output_file = basepath / \
