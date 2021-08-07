@@ -41,6 +41,25 @@ char *load_kernel(const char *filename)
 	return source;
 }
 
+unsigned char *load_file(char *fname, size_t *len)
+{
+	FILE *fp = fopen(fname, "rb");
+	if (fp == NULL)
+		return NULL;
+
+	fseek(fp, 0, SEEK_END);
+	*len = ftell(fp);
+	rewind(fp);
+
+	unsigned char *buffer = (unsigned char *) malloc(*len * sizeof(unsigned char));
+	if (buffer == NULL)
+		return NULL;
+
+	fread(buffer, *len, 1, fp);
+	fclose(fp);
+	return buffer; 
+}
+
 void 
 fatal_CL(cl_int error, int line_no) {
 
@@ -186,7 +205,13 @@ int execute_kernel(char *kernel_name, const char *src, int gsize, int lsize)
 
 	// Create the program
 	size_t srclen = strlen(src);
-	cl_program program = CECL_PROGRAM_WITH_SOURCE(context, 1, &src, &srclen, &error);
+	char ptxName = getenv("OPT_PROGRAM_PTX_PATH");
+	source_str = load_file(ptxName, &srclen);
+	if (source_str) {
+		cl_program program = CECL_PROGRAM_WITH_BINARY(context, num_devices, devices, &source_str, &srclen, &error);
+	} else {
+		cl_program program = CECL_PROGRAM_WITH_SOURCE(context, 1, &src, &srclen, &error);
+	}
 	if (error != CL_SUCCESS) 
 		fatal_CL(error, __LINE__);
 
