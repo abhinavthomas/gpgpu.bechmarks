@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rlibcecl.proto\"\x83\x02\n\x14LibceclExecutableRun\x12\x1b\n\x13ms_since_unix_epoch\x18\x01 \x02(\x03\x12\x12\n\nreturncode\x18\x02 \x02(\x05\x12\x10\n\x08\x63\x65\x63l_log\x18\x03 \x02(\t\x12\x0e\n\x06stdout\x18\x04 \x02(\t\x12\x0e\n\x06stderr\x18\x05 \x02(\t\x12\x32\n\x11kernel_invocation\x18\x06 \x03(\x0b\x32\x17.OpenClKernelInvocation\x12\x17\n\x0f\x65lapsed_time_ns\x18\x07 \x02(\x03\x12\x1d\n\x15opencl_program_source\x18\x08 \x03(\t\x12\x1c\n\x14opencl_build_options\x18\t \x03(\t\"\xa3\x01\n\x16OpenClKernelInvocation\x12\x13\n\x0bkernel_name\x18\x01 \x02(\t\x12\x13\n\x0bglobal_size\x18\x02 \x02(\x03\x12\x12\n\nlocal_size\x18\x03 \x02(\x03\x12\x19\n\x11transferred_bytes\x18\x04 \x02(\x03\x12\x18\n\x10transfer_time_ns\x18\x05 \x02(\x03\x12\x16\n\x0ekernel_time_ns\x18\x06 \x02(\x03\"\xcf\x01\n\x0cOpenClDevice\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x15\n\rplatform_name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65vice_name\x18\x03 \x01(\t\x12\x16\n\x0e\x64river_version\x18\x04 \x01(\t\x12\x16\n\x0eopencl_version\x18\x05 \x01(\t\x12\x13\n\x0b\x64\x65vice_type\x18\x06 \x01(\t\x12\x13\n\x0bplatform_id\x18\n \x01(\x05\x12\x11\n\tdevice_id\x18\x0b \x01(\x05\x12\x18\n\nopencl_opt\x18\x0c \x01(\x08:\x04true'
+  serialized_pb=b'\n\rlibcecl.proto\"\xd9\x02\n\x14LibceclExecutableRun\x12\x1b\n\x13ms_since_unix_epoch\x18\x01 \x02(\x03\x12\x12\n\nreturncode\x18\x02 \x02(\x05\x12\x10\n\x08\x63\x65\x63l_log\x18\x03 \x02(\t\x12\x0e\n\x06stdout\x18\x04 \x02(\t\x12\x0e\n\x06stderr\x18\x05 \x02(\t\x12\x32\n\x11kernel_invocation\x18\x06 \x03(\x0b\x32\x17.OpenClKernelInvocation\x12\x17\n\x0f\x65lapsed_time_ns\x18\x07 \x02(\x03\x12\x1d\n\x15opencl_program_source\x18\x08 \x03(\t\x12\x1c\n\x14opencl_build_options\x18\t \x03(\t\x12\n\n\x02ir\x18\n \x02(\t\x12\'\n\x08opt_runs\x18\x0b \x03(\x0b\x32\x15.LibceclExecutableRun\x12\x12\n\nopt_passes\x18\x0c \x01(\t\x12\x0b\n\x03ptx\x18\r \x01(\t\"\xa3\x01\n\x16OpenClKernelInvocation\x12\x13\n\x0bkernel_name\x18\x01 \x02(\t\x12\x13\n\x0bglobal_size\x18\x02 \x02(\x03\x12\x12\n\nlocal_size\x18\x03 \x02(\x03\x12\x19\n\x11transferred_bytes\x18\x04 \x02(\x03\x12\x18\n\x10transfer_time_ns\x18\x05 \x02(\x03\x12\x16\n\x0ekernel_time_ns\x18\x06 \x02(\x03\"\xcf\x01\n\x0cOpenClDevice\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x15\n\rplatform_name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65vice_name\x18\x03 \x01(\t\x12\x16\n\x0e\x64river_version\x18\x04 \x01(\t\x12\x16\n\x0eopencl_version\x18\x05 \x01(\t\x12\x13\n\x0b\x64\x65vice_type\x18\x06 \x01(\t\x12\x13\n\x0bplatform_id\x18\n \x01(\x05\x12\x11\n\tdevice_id\x18\x0b \x01(\x05\x12\x18\n\nopencl_opt\x18\x0c \x01(\x08:\x04true'
 )
 
 
@@ -96,6 +96,34 @@ _LIBCECLEXECUTABLERUN = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='ir', full_name='LibceclExecutableRun.ir', index=9,
+      number=10, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='opt_runs', full_name='LibceclExecutableRun.opt_runs', index=10,
+      number=11, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='opt_passes', full_name='LibceclExecutableRun.opt_passes', index=11,
+      number=12, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='ptx', full_name='LibceclExecutableRun.ptx', index=12,
+      number=13, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -109,7 +137,7 @@ _LIBCECLEXECUTABLERUN = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=18,
-  serialized_end=277,
+  serialized_end=363,
 )
 
 
@@ -175,8 +203,8 @@ _OPENCLKERNELINVOCATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=280,
-  serialized_end=443,
+  serialized_start=366,
+  serialized_end=529,
 )
 
 
@@ -263,11 +291,12 @@ _OPENCLDEVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=446,
-  serialized_end=653,
+  serialized_start=532,
+  serialized_end=739,
 )
 
 _LIBCECLEXECUTABLERUN.fields_by_name['kernel_invocation'].message_type = _OPENCLKERNELINVOCATION
+_LIBCECLEXECUTABLERUN.fields_by_name['opt_runs'].message_type = _LIBCECLEXECUTABLERUN
 DESCRIPTOR.message_types_by_name['LibceclExecutableRun'] = _LIBCECLEXECUTABLERUN
 DESCRIPTOR.message_types_by_name['OpenClKernelInvocation'] = _OPENCLKERNELINVOCATION
 DESCRIPTOR.message_types_by_name['OpenClDevice'] = _OPENCLDEVICE

@@ -6,7 +6,7 @@ import random
 import subprocess
 from pathlib import Path
 import hashlib
-import sqlite3
+import config
 
 OPT = Path('/hdd/abhinav/llvm-project/build/bin/opt')
 LLC = Path('/hdd/abhinav/llvm-project/build/bin/llc')
@@ -14,11 +14,11 @@ LLC = Path('/hdd/abhinav/llvm-project/build/bin/llc')
 PASSES_FILE = Path('passes.txt')  # Where the valid passes will be saved
 COMBOS_FILE = Path('passes_combos.txt')
 
-TESTIN_LL = 'temp_src_code.ll'  # Bitcode to use as input for opt
-TESTOUT_LL = 'temp_src_code_opt.ll'  # opt output bitcode
-TESTOUT_PTX = 'temp_src_code.ptx'  # output ptx
+TESTIN_LL = config.BASE_PATH / 'temp_src_code.ll'  # Bitcode to use as input for opt
+TESTOUT_LL = config.BASE_PATH / 'temp_src_code_opt.ll'  # opt output bitcode
+TESTOUT_PTX = config.BASE_PATH / 'temp_src_code.ptx'  # output ptx
 
-_TEST = False
+_TEST = True 
 
 if _TEST:
     RANDOM_COMBOS_NUM = 10  # The size of the initial seed of randomly generated passes
@@ -63,7 +63,7 @@ class Version(object):
         try:
             res = subprocess.run(cmd_opt, check=True, universal_newlines=True)
         except subprocess.CalledProcessError as ex:
-            print(f'Failed1: {self.passes}')
+            #print(f'Failed1: {self.passes}')
             return False
         return True
 
@@ -72,7 +72,7 @@ class Version(object):
         try:
             res = subprocess.run(cmd_llc, check=True, universal_newlines=True)
         except subprocess.CalledProcessError as ex:
-            print(f'Failed2: {self.passes}')
+            #print(f'Failed2: {self.passes}')
             return False
         return True
 

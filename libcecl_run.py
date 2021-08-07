@@ -38,7 +38,7 @@ def output_file(fname):
 def build_cmd(fname, build_options):
     fname_out = output_file(fname)
     ext_type = '-S' if _EXT == '.ll' else ''
-    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
+    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -finclude-default-header -D__OPENCL_VERSION__ {" ".join(build_options)} {fname} -o {fname_out}'
     return cmd.split()+["-target", "nvptx64-nvidia-nvcl"]
 
 
@@ -56,25 +56,27 @@ def execute(command, clenv, os_env=None, record_outputs=True):
 
     stderr_lines, cecl_lines, program_sources, build_options = SplitStderrComponents(
         process.stderr)
-    fname = "temp_src_code.cl"
-    fname_out = "temp_src_code.ll"
+    fname = config.BASE_PATH / "temp_src_code.cl"
+    fname_out = config.BASE_PATH / "temp_src_code.ll"
     with open(fname, 'w') as fsrc:
-        fsrc.write(program_sources)
+        fsrc.write(''.join(program_sources))
     # Generate the command line for compiling the kernel
     cmd = build_cmd(fname, build_options)
+    l_runs=[]
     try:
         # Run and trigger an exception if it is unsuccessful
-        p = subprocess.run(cmd, check=True)
+        subprocess.run(cmd, check=True)
         with open(fname_out, 'r') as fp:
-            print(fp.read())
+            ir = fp.read()
         variations = opt_flags.main()
-        print(variations)
     except subprocess.CalledProcessError as e:
-        # print("error",bmark,e)
-        p.stderr
+        print("error",cmd,e)
         raise e
 
-    return libcecl_pb2.LibceclExecutableRun(
+    for v, combo in variations.items():
+        passes_txt=' '.join([f'--{p}' for p in combo])
+        l_runs.append(libcecl_pb2.LibceclExecutableRun(ms_since_unix_epoch=timestamp,returncode=process.returncode,stdout=process.stdout if record_outputs else "",stderr="\n".join(stderr_lines) if record_outputs else "",cecl_log="\n".join(cecl_lines) if record_outputs else "",kernel_invocation=KernelInvocationsFromCeclLog(cecl_lines,expected_devtype=clenv.device_type,expected_device_name=clenv.device_name),elapsed_time_ns=int(elapsed * 1e9),opencl_program_source=program_sources,opencl_build_options=build_options,ir=v.ir,opt_passes=passes_txt,ptx=v.ptx))
+    main_run = libcecl_pb2.LibceclExecutableRun(
         ms_since_unix_epoch=timestamp,
         returncode=process.returncode,
         stdout=process.stdout if record_outputs else "",
@@ -88,7 +90,11 @@ def execute(command, clenv, os_env=None, record_outputs=True):
         elapsed_time_ns=int(elapsed * 1e9),
         opencl_program_source=program_sources,
         opencl_build_options=build_options,
+        ir=ir,
+        opt_runs=l_runs
     )
+    
+    return main_run
 
 
 @functools.lru_cache(maxsize=2)

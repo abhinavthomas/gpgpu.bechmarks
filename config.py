@@ -8,7 +8,7 @@ LOGS_PATH = BASE_PATH / 'logs'
 RUNLOGS_PATH = BASE_PATH / 'runs'
 KERNELDB_PATH = BASE_PATH / 'kernelDB'
 
-OPENCL_HEADERS_DIR = pathlib.Path('/usr/local/cuda/include/CL')
+OPENCL_HEADERS_DIR = pathlib.Path('/usr/local/cuda/include')
 LIBOPENCL_DIR = pathlib.Path('/usr/local/cuda/lib64')
 
 BENCHMARK_SUITE_NAMES = [

@@ -28,6 +28,10 @@ message LibceclExecutableRun {
   required int64 elapsed_time_ns = 7;
   repeated string opencl_program_source = 8;
   repeated string opencl_build_options = 9;
+  required string ir=10;
+  repeated LibceclExecutableRun opt_runs = 11;
+  optional string opt_passes=12;
+  optional string ptx=13;
 }
 
 // A single kernel invocation event.
