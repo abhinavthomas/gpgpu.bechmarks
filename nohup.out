@@ -1076,3 +1076,1196 @@ CheckModuleDebugify: Skipping module without debugify metadata
 CheckModuleDebugify: Skipping module without debugify metadata
 CheckModuleDebugify: Skipping module without debugify metadata
 CheckModuleDebugify: Skipping module without debugify metadata
+rm -f driver
+cc -march=native -O3 -o driver driver.c -isystem /usr/local/cuda/include -isystem /home/abhinav/gpgpu.bechmarks -isystem /tmp/libcecl_header_5s274ylz -std=gnu11 -L/usr/local/cuda/lib64 -Wl,-rpath,/usr/local/cuda/lib64 -lOpenCL -DCL_SILENCE_DEPRECATION -lcecl -L/home/abhinav/gpgpu.bechmarks
+driver.c: In function ‘execute_kernel’:
+driver.c:213:69: warning: passing argument 4 of ‘CECL_PROGRAM_WITH_BINARY’ from incompatible pointer type [-Wincompatible-pointer-types]
+  213 |   program = CECL_PROGRAM_WITH_BINARY(context, num_devices, devices, &source_str, &srclen, &error);
+      |                                                                     ^~~~~~~~~~~
+      |                                                                     |
+      |                                                                     char **
+In file included from driver.c:1:
+/home/abhinav/gpgpu.bechmarks/libcecl.h:57:50: note: expected ‘const char **’ but argument is of type ‘char **’
+   57 |                                     const char **strings, const size_t *lengths,
+      |                                     ~~~~~~~~~~~~~^~~~~~~
+clang-13: warning: argument unused during compilation: '-c' [-Wunused-command-line-argument]
+/home/abhinav/gpgpu.bechmarks/temp_src_code.cl:4:9: warning: ordered comparison between pointer and integer ('int' and '__global float *')
+  if (e < c) {
+      ~ ^ ~
+1 warning generated.
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'alloca-hoisting'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'assumption-cache-tracker'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'barrier'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'basiccg'
+CheckModuleDebugify: Skipping module without debugify metadata
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'check-debugify-function'
+opt: /hdd/abhinav/llvm-project/llvm/lib/Transforms/Instrumentation/ControlHeightReduction.cpp:449: bool shouldApply(llvm::Function&, llvm::ProfileSummaryInfo&): Assertion `PSI.hasProfileSummary() && "Empty PSI?"' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --chr /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007f9d1fddd5e0 __restore_rt sigaction.c:0:0
+ #5 0x00007f9d1ebfe1f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007f9d1ebff8e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007f9d1ebf7266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007f9d1ebf7312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004563f15 shouldApply(llvm::Function&, llvm::ProfileSummaryInfo&) /hdd/abhinav/llvm-project/llvm/lib/Transforms/Instrumentation/ControlHeightReduction.cpp:449:3
+#10 0x000000000456dbed (anonymous namespace)::CHR::run() /hdd/abhinav/llvm-project/llvm/lib/Transforms/Instrumentation/ControlHeightReduction.cpp:1998:7
+#11 0x000000000456e31f llvm::ControlHeightReductionPass::run(llvm::Function&, llvm::AnalysisManager<llvm::Function>&) /hdd/abhinav/llvm-project/llvm/lib/Transforms/Instrumentation/ControlHeightReduction.cpp:2101:51
+#12 0x0000000004fb6fac llvm::detail::PassModel<llvm::Function, llvm::ControlHeightReductionPass, llvm::PreservedAnalyses, llvm::AnalysisManager<llvm::Function> >::run(llvm::Function&, llvm::AnalysisManager<llvm::Function>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManagerInternal.h:86:3
+#13 0x00000000040d82f8 llvm::PassManager<llvm::Function, llvm::AnalysisManager<llvm::Function> >::run(llvm::Function&, llvm::AnalysisManager<llvm::Function>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManager.h:509:16
+#14 0x0000000002013f3a llvm::detail::PassModel<llvm::Function, llvm::PassManager<llvm::Function, llvm::AnalysisManager<llvm::Function> >, llvm::PreservedAnalyses, llvm::AnalysisManager<llvm::Function> >::run(llvm::Function&, llvm::AnalysisManager<llvm::Function>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManagerInternal.h:86:3
+#15 0x00000000040d7d19 llvm::ModuleToFunctionPassAdaptor::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/lib/IR/PassManager.cpp:117:32
+#16 0x0000000001a60c0a llvm::detail::PassModel<llvm::Module, llvm::ModuleToFunctionPassAdaptor, llvm::PreservedAnalyses, llvm::AnalysisManager<llvm::Module> >::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManagerInternal.h:86:3
+#17 0x00000000040d8014 llvm::PassManager<llvm::Module, llvm::AnalysisManager<llvm::Module> >::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManager.h:509:16
+#18 0x0000000001a3ed59 llvm::runPassPipeline(llvm::StringRef, llvm::Module&, llvm::TargetMachine*, llvm::TargetLibraryInfoImpl*, llvm::ToolOutputFile*, llvm::ToolOutputFile*, llvm::ToolOutputFile*, llvm::StringRef, llvm::ArrayRef<llvm::StringRef>, llvm::opt_tool::OutputKind, llvm::opt_tool::VerifierKind, bool, bool, bool, bool, bool) /hdd/abhinav/llvm-project/llvm/tools/opt/NewPMDriver.cpp:459:10
+#19 0x0000000001a718c6 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:830:27
+#20 0x00007f9d1ebeac05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#21 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'cseinfo'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'delinearize'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'edge-bundles'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'external-aa'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'fasttileconfig'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'flattencfg'
+LLVM ERROR: error: -function-import requires -summary-file
+
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --function-import /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007facc70935e0 __restore_rt sigaction.c:0:0
+ #5 0x00007facc5eb41f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007facc5eb58e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x0000000004ad87e9 llvm::install_bad_alloc_error_handler(void (*)(void*, std::string const&, bool), void*) /hdd/abhinav/llvm-project/llvm/lib/Support/ErrorHandling.cpp:130:61
+ #8 0x0000000004ad85f2 llvm::report_fatal_error(std::string const&, bool) /hdd/abhinav/llvm-project/llvm/lib/Support/ErrorHandling.cpp:86:77
+ #9 0x0000000004274c38 doImportingForModule(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/Transforms/IPO/FunctionImport.cpp:1331:47
+#10 0x000000000427520e llvm::FunctionImportPass::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/lib/Transforms/IPO/FunctionImport.cpp:1413:7
+#11 0x0000000004fb4cca llvm::detail::PassModel<llvm::Module, llvm::FunctionImportPass, llvm::PreservedAnalyses, llvm::AnalysisManager<llvm::Module> >::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManagerInternal.h:86:3
+#12 0x00000000040d8014 llvm::PassManager<llvm::Module, llvm::AnalysisManager<llvm::Module> >::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManager.h:509:16
+#13 0x0000000001a3ed59 llvm::runPassPipeline(llvm::StringRef, llvm::Module&, llvm::TargetMachine*, llvm::TargetLibraryInfoImpl*, llvm::ToolOutputFile*, llvm::ToolOutputFile*, llvm::ToolOutputFile*, llvm::StringRef, llvm::ArrayRef<llvm::StringRef>, llvm::opt_tool::OutputKind, llvm::opt_tool::VerifierKind, bool, bool, bool, bool, bool) /hdd/abhinav/llvm-project/llvm/tools/opt/NewPMDriver.cpp:459:10
+#14 0x0000000001a718c6 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:830:27
+#15 0x00007facc5ea0c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#16 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --gcn-dpp-combine /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007f775768c5e0 __restore_rt sigaction.c:0:0
+ #5 0x0000000001fcdc8c std::__uniq_ptr_impl<llvm::MCSubtargetInfo const, std::default_delete<llvm::MCSubtargetInfo const> >::_M_ptr() const /opt/rh/devtoolset-9/root/usr/include/c++/9/bits/unique_ptr.h:154:58
+ #6 0x0000000001fcd0c6 std::unique_ptr<llvm::MCSubtargetInfo const, std::default_delete<llvm::MCSubtargetInfo const> >::get() const /opt/rh/devtoolset-9/root/usr/include/c++/9/bits/unique_ptr.h:361:31
+ #7 0x0000000001fcc9de llvm::TargetMachine::getMCSubtargetInfo() const /hdd/abhinav/llvm-project/llvm/include/llvm/Target/TargetMachine.h:206:73
+ #8 0x0000000003a8c826 llvm::MachineModuleInfo::MachineModuleInfo(llvm::LLVMTargetMachine const*) /hdd/abhinav/llvm-project/llvm/lib/CodeGen/MachineModuleInfo.cpp:239:47
+ #9 0x0000000003a8cfb7 llvm::MachineModuleInfoWrapperPass::MachineModuleInfoWrapperPass(llvm::LLVMTargetMachine const*) /hdd/abhinav/llvm-project/llvm/lib/CodeGen/MachineModuleInfo.cpp:358:76
+#10 0x0000000003a8f136 llvm::Pass* llvm::callDefaultCtor<llvm::MachineModuleInfoWrapperPass>() /hdd/abhinav/llvm-project/llvm/include/llvm/PassSupport.h:80:76
+#11 0x0000000004080956 llvm::PassInfo::createPass() const /hdd/abhinav/llvm-project/llvm/include/llvm/PassInfo.h:102:3
+#12 0x0000000004079a1e llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:716:38
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007f7756499c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'gisel-known-bits'
+opt: /hdd/abhinav/llvm-project/llvm/lib/Transforms/IPO/Inliner.cpp:671: llvm::InlineAdvisor& llvm::InlinerPass::getAdvisor(const llvm::OuterAnalysisManagerProxy<llvm::AnalysisManager<llvm::Module>, llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>::Result&, llvm::FunctionAnalysisManager&, llvm::Module&): Assertion `IAA->getAdvisor() && "Expected a present InlineAdvisorAnalysis also have an " "InlineAdvisor initialized"' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --inline /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007f1bbf8f65e0 __restore_rt sigaction.c:0:0
+ #5 0x00007f1bbe7171f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007f1bbe7188e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007f1bbe710266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007f1bbe710312 (/lib64/libc.so.6+0x2e312)
+ #9 0x00000000042bfa2f llvm::InlinerPass::getAdvisor(llvm::OuterAnalysisManagerProxy<llvm::AnalysisManager<llvm::Module>, llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>::Result const&, llvm::AnalysisManager<llvm::Function>&, llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/Transforms/IPO/Inliner.cpp:671:3
+#10 0x00000000042bfe08 llvm::InlinerPass::run(llvm::LazyCallGraph::SCC&, llvm::AnalysisManager<llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>&, llvm::LazyCallGraph&, llvm::CGSCCUpdateResult&) /hdd/abhinav/llvm-project/llvm/lib/Transforms/IPO/Inliner.cpp:839:55
+#11 0x00000000042ccb6a llvm::detail::PassModel<llvm::LazyCallGraph::SCC, llvm::InlinerPass, llvm::PreservedAnalyses, llvm::AnalysisManager<llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>, llvm::LazyCallGraph&, llvm::CGSCCUpdateResult&>::run(llvm::LazyCallGraph::SCC&, llvm::AnalysisManager<llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>&, llvm::LazyCallGraph&, llvm::CGSCCUpdateResult&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManagerInternal.h:86:3
+#12 0x00000000034329e5 llvm::PassManager<llvm::LazyCallGraph::SCC, llvm::AnalysisManager<llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>, llvm::LazyCallGraph&, llvm::CGSCCUpdateResult&>::run(llvm::LazyCallGraph::SCC&, llvm::AnalysisManager<llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>&, llvm::LazyCallGraph&, llvm::CGSCCUpdateResult&) /hdd/abhinav/llvm-project/llvm/lib/Analysis/CGSCCPassManager.cpp:89:39
+#13 0x00000000042ccaf2 llvm::detail::PassModel<llvm::LazyCallGraph::SCC, llvm::PassManager<llvm::LazyCallGraph::SCC, llvm::AnalysisManager<llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>, llvm::LazyCallGraph&, llvm::CGSCCUpdateResult&>, llvm::PreservedAnalyses, llvm::AnalysisManager<llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>, llvm::LazyCallGraph&, llvm::CGSCCUpdateResult&>::run(llvm::LazyCallGraph::SCC&, llvm::AnalysisManager<llvm::LazyCallGraph::SCC, llvm::LazyCallGraph&>&, llvm::LazyCallGraph&, llvm::CGSCCUpdateResult&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManagerInternal.h:86:3
+#14 0x000000000343340e llvm::ModuleToPostOrderCGSCCPassAdaptor::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/lib/Analysis/CGSCCPassManager.cpp:288:48
+#15 0x00000000042cca7a llvm::detail::PassModel<llvm::Module, llvm::ModuleToPostOrderCGSCCPassAdaptor, llvm::PreservedAnalyses, llvm::AnalysisManager<llvm::Module> >::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManagerInternal.h:86:3
+#16 0x00000000040d8014 llvm::PassManager<llvm::Module, llvm::AnalysisManager<llvm::Module> >::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) /hdd/abhinav/llvm-project/llvm/include/llvm/IR/PassManager.h:509:16
+#17 0x0000000001a3ed59 llvm::runPassPipeline(llvm::StringRef, llvm::Module&, llvm::TargetMachine*, llvm::TargetLibraryInfoImpl*, llvm::ToolOutputFile*, llvm::ToolOutputFile*, llvm::ToolOutputFile*, llvm::StringRef, llvm::ArrayRef<llvm::StringRef>, llvm::opt_tool::OutputKind, llvm::opt_tool::VerifierKind, bool, bool, bool, bool, bool) /hdd/abhinav/llvm-project/llvm/tools/opt/NewPMDriver.cpp:459:10
+#18 0x0000000001a718c6 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:830:27
+#19 0x00007f1bbe703c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#20 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'instruction-select'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'intervals'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'ir-similarity-identifier'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'lazy-block-freq'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'lazy-branch-prob'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'lcssa-verification'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'legalizer'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'liveintervals'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'liveregmatrix'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'livevars'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'localizer'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'loop-accesses'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'loop-guard-widening'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'loop-unswitch'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'lowertilecopy'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'machine-block-freq'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'machine-branch-prob'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'machine-domfrontier'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'machine-loops'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'machine-trace-metrics'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'machinedomtree'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'machinepostdomtree'
+LLVM ERROR: Module has a nontrivial global ctor, which NVPTX does not support.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/llc -O2 --mcpu=sm_60 /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code.ptx
+ #0 0x000000000490c449 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x000000000490c500 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x000000000490a4e4 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x000000000490be90 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007ff014a715e0 __restore_rt sigaction.c:0:0
+ #5 0x00007ff0138921f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007ff0138938e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x0000000004858afe llvm::install_bad_alloc_error_handler(void (*)(void*, std::string const&, bool), void*) /hdd/abhinav/llvm-project/llvm/lib/Support/ErrorHandling.cpp:130:61
+ #8 0x0000000004858907 llvm::report_fatal_error(std::string const&, bool) /hdd/abhinav/llvm-project/llvm/lib/Support/ErrorHandling.cpp:86:77
+ #9 0x000000000294ad89 llvm::NVPTXAsmPrinter::doInitialization(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/Target/NVPTX/NVPTXAsmPrinter.cpp:789:25
+#10 0x0000000003fda99a llvm::FPPassManager::doInitialization(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1494:13
+#11 0x0000000003fdabb2 (anonymous namespace)::MPPassManager::runOnModule(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1528:13
+#12 0x0000000003fd63ca llvm::legacy::PassManagerImpl::run(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:542:13
+#13 0x0000000003fdb52f llvm::legacy::PassManager::run(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1682:1
+#14 0x0000000001a14b7d compileModule(char**, llvm::LLVMContext&) /hdd/abhinav/llvm-project/llvm/tools/llc/llc.cpp:692:66
+#15 0x0000000001a129be main /hdd/abhinav/llvm-project/llvm/tools/llc/llc.cpp:390:35
+#16 0x00007ff01387ec05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#17 0x0000000001a11ab5 _start (/hdd/abhinav/llvm-project/build/bin/llc+0x1a11ab5)
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'module-debuginfo'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'module-summary-analysis'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'module-summary-info'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'mve-laneinterleave'
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --nvptx-proxyreg-erasure /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007f39bb1605e0 __restore_rt sigaction.c:0:0
+ #5 0x0000000001fcdc8c std::__uniq_ptr_impl<llvm::MCSubtargetInfo const, std::default_delete<llvm::MCSubtargetInfo const> >::_M_ptr() const /opt/rh/devtoolset-9/root/usr/include/c++/9/bits/unique_ptr.h:154:58
+ #6 0x0000000001fcd0c6 std::unique_ptr<llvm::MCSubtargetInfo const, std::default_delete<llvm::MCSubtargetInfo const> >::get() const /opt/rh/devtoolset-9/root/usr/include/c++/9/bits/unique_ptr.h:361:31
+ #7 0x0000000001fcc9de llvm::TargetMachine::getMCSubtargetInfo() const /hdd/abhinav/llvm-project/llvm/include/llvm/Target/TargetMachine.h:206:73
+ #8 0x0000000003a8c826 llvm::MachineModuleInfo::MachineModuleInfo(llvm::LLVMTargetMachine const*) /hdd/abhinav/llvm-project/llvm/lib/CodeGen/MachineModuleInfo.cpp:239:47
+ #9 0x0000000003a8cfb7 llvm::MachineModuleInfoWrapperPass::MachineModuleInfoWrapperPass(llvm::LLVMTargetMachine const*) /hdd/abhinav/llvm-project/llvm/lib/CodeGen/MachineModuleInfo.cpp:358:76
+#10 0x0000000003a8f136 llvm::Pass* llvm::callDefaultCtor<llvm::MachineModuleInfoWrapperPass>() /hdd/abhinav/llvm-project/llvm/include/llvm/PassSupport.h:80:76
+#11 0x0000000004080956 llvm::PassInfo::createPass() const /hdd/abhinav/llvm-project/llvm/include/llvm/PassInfo.h:102:3
+#12 0x0000000004079a1e llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:716:38
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007f39b9f6dc05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'opt-remark-emitter'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'pa-eval'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'place-backedge-safepoints-impl'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'place-safepoints'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'prune-eh'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'pseudo-probe-inserter'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'reaching-deps-analysis'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'regbankselect'
+error: Could not open profile: No such file or directory
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'slotindexes'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'stack-protector'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'targetpassconfig'
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --thumb2-reduce-size /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007fcf67e265e0 __restore_rt sigaction.c:0:0
+ #5 0x0000000001fcdc8c std::__uniq_ptr_impl<llvm::MCSubtargetInfo const, std::default_delete<llvm::MCSubtargetInfo const> >::_M_ptr() const /opt/rh/devtoolset-9/root/usr/include/c++/9/bits/unique_ptr.h:154:58
+ #6 0x0000000001fcd0c6 std::unique_ptr<llvm::MCSubtargetInfo const, std::default_delete<llvm::MCSubtargetInfo const> >::get() const /opt/rh/devtoolset-9/root/usr/include/c++/9/bits/unique_ptr.h:361:31
+ #7 0x0000000001fcc9de llvm::TargetMachine::getMCSubtargetInfo() const /hdd/abhinav/llvm-project/llvm/include/llvm/Target/TargetMachine.h:206:73
+ #8 0x0000000003a8c826 llvm::MachineModuleInfo::MachineModuleInfo(llvm::LLVMTargetMachine const*) /hdd/abhinav/llvm-project/llvm/lib/CodeGen/MachineModuleInfo.cpp:239:47
+ #9 0x0000000003a8cfb7 llvm::MachineModuleInfoWrapperPass::MachineModuleInfoWrapperPass(llvm::LLVMTargetMachine const*) /hdd/abhinav/llvm-project/llvm/lib/CodeGen/MachineModuleInfo.cpp:358:76
+#10 0x0000000003a8f136 llvm::Pass* llvm::callDefaultCtor<llvm::MachineModuleInfoWrapperPass>() /hdd/abhinav/llvm-project/llvm/include/llvm/PassSupport.h:80:76
+#11 0x0000000004080956 llvm::PassInfo::createPass() const /hdd/abhinav/llvm-project/llvm/include/llvm/PassInfo.h:102:3
+#12 0x0000000004079a1e llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:716:38
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007fcf66c33c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'tileconfig'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'tti'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'unreachable-mbb-elimination'
+/hdd/abhinav/llvm-project/build/bin/opt: unknown pass name 'virtregmap'
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+clang-13: warning: argument unused during compilation: '-c' [-Wunused-command-line-argument]
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:589: void llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*): Assertion `AnalysisPass && "Expected analysis pass to exist."' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --redundant-dbg-inst-elim --phi-values --div-rem-pairs --loop-extract --speculative-execution --lower-guard-intrinsic --gvn-hoist --interleaved-load-combine --loop-extract-single --aa /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007f54aed0c5e0 __restore_rt sigaction.c:0:0
+ #5 0x00007f54adb2d1f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007f54adb2e8e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007f54adb26266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007f54adb26312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004078fcd llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:590:55
+#10 0x000000000407b649 llvm::PMDataManager::add(llvm::Pass*, bool) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1077:30
+#11 0x000000000407e203 llvm::FunctionPass::assignPassManager(llvm::PMStack&, llvm::PassManagerType) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1773:1
+#12 0x0000000004079e18 llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:760:31
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007f54adb19c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:589: void llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*): Assertion `AnalysisPass && "Expected analysis pass to exist."' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --separate-const-offset-from-gep --dwarfehprepare --gvn-sink --memcpyopt --unify-loop-exits --gvn-hoist --lcssa --interleaved-load-combine --dse --alignment-from-assumptions /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007eff1d4ec5e0 __restore_rt sigaction.c:0:0
+ #5 0x00007eff1c30d1f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007eff1c30e8e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007eff1c306266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007eff1c306312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004078fcd llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:590:55
+#10 0x000000000407b649 llvm::PMDataManager::add(llvm::Pass*, bool) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1077:30
+#11 0x000000000407e203 llvm::FunctionPass::assignPassManager(llvm::PMStack&, llvm::PassManagerType) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1773:1
+#12 0x0000000004079e18 llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:760:31
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007eff1c2f9c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:589: void llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*): Assertion `AnalysisPass && "Expected analysis pass to exist."' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --slsr --instcombine --scalarizer --structurizecfg --coro-split --dse --interleaved-load-combine --mergereturn --inject-tli-mappings --mem2reg /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007fd0d0bfc5e0 __restore_rt sigaction.c:0:0
+ #5 0x00007fd0cfa1d1f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007fd0cfa1e8e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007fd0cfa16266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007fd0cfa16312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004078fcd llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:590:55
+#10 0x000000000407b649 llvm::PMDataManager::add(llvm::Pass*, bool) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1077:30
+#11 0x000000000407e203 llvm::FunctionPass::assignPassManager(llvm::PMStack&, llvm::PassManagerType) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1773:1
+#12 0x0000000004079e18 llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:760:31
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007fd0cfa09c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:589: void llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*): Assertion `AnalysisPass && "Expected analysis pass to exist."' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --cfl-steens-aa --cross-dso-cfi --basic-aa --globalopt --gvn-hoist --interleaved-load-combine --interleaved-access --mve-tail-predication --reassociate --instcombine /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007f9b6f3a15e0 __restore_rt sigaction.c:0:0
+ #5 0x00007f9b6e1c21f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007f9b6e1c38e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007f9b6e1bb266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007f9b6e1bb312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004078fcd llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:590:55
+#10 0x000000000407b649 llvm::PMDataManager::add(llvm::Pass*, bool) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1077:30
+#11 0x000000000407e203 llvm::FunctionPass::assignPassManager(llvm::PMStack&, llvm::PassManagerType) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1773:1
+#12 0x0000000004079e18 llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:760:31
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007f9b6e1aec05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+clang-13: warning: argument unused during compilation: '-c' [-Wunused-command-line-argument]
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:589: void llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*): Assertion `AnalysisPass && "Expected analysis pass to exist."' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --infer-address-spaces --gvn-hoist --interleaved-load-combine --lower-expect --ee-instrument --loop-reduce --loop-sink --assume-builder --sroa --inject-tli-mappings /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007efc5c48d5e0 __restore_rt sigaction.c:0:0
+ #5 0x00007efc5b2ae1f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007efc5b2af8e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007efc5b2a7266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007efc5b2a7312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004078fcd llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:590:55
+#10 0x000000000407b649 llvm::PMDataManager::add(llvm::Pass*, bool) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1077:30
+#11 0x000000000407e203 llvm::FunctionPass::assignPassManager(llvm::PMStack&, llvm::PassManagerType) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1773:1
+#12 0x0000000004079e18 llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:760:31
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007efc5b29ac05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:589: void llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*): Assertion `AnalysisPass && "Expected analysis pass to exist."' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --alignment-from-assumptions --annotation-remarks --loop-simplify --break-crit-edges --loop-distribute --memoryssa --dse --interleaved-load-combine --partial-inliner --correlated-propagation /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007f2dd86335e0 __restore_rt sigaction.c:0:0
+ #5 0x00007f2dd74541f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007f2dd74558e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007f2dd744d266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007f2dd744d312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004078fcd llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:590:55
+#10 0x000000000407b649 llvm::PMDataManager::add(llvm::Pass*, bool) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1077:30
+#11 0x000000000407e203 llvm::FunctionPass::assignPassManager(llvm::PMStack&, llvm::PassManagerType) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1773:1
+#12 0x0000000004079e18 llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:760:31
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007f2dd7440c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:589: void llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*): Assertion `AnalysisPass && "Expected analysis pass to exist."' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --instrorderfile --sjljehprepare --gvn-hoist --interleaved-load-combine --loop-fusion --dwarfehprepare --cross-dso-cfi --elim-avail-extern --assume-simplify --interleaved-access /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007fd01b7bd5e0 __restore_rt sigaction.c:0:0
+ #5 0x00007fd01a5de1f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007fd01a5df8e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007fd01a5d7266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007fd01a5d7312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004078fcd llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:590:55
+#10 0x000000000407b649 llvm::PMDataManager::add(llvm::Pass*, bool) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1077:30
+#11 0x000000000407e203 llvm::FunctionPass::assignPassManager(llvm::PMStack&, llvm::PassManagerType) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1773:1
+#12 0x0000000004079e18 llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:760:31
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007fd01a5cac05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/include/llvm/PassAnalysisSupport.h:243: AnalysisType& llvm::Pass::getAnalysisID(llvm::AnalysisID) const [with AnalysisType = llvm::CallGraphWrapperPass; llvm::AnalysisID = const void*]: Assertion `ResultPass && "getAnalysis*() called on an analysis that was not " "'required' by pass!"' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --branch-prob --hardware-loops --phi-values --globals-aa --block-freq --annotation-remarks --adce --always-inline --rpo-function-attrs --instrorderfile /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+1.	Running pass 'Deduce function attributes in RPO' on module '/home/abhinav/gpgpu.bechmarks/temp_src_code.ll'.
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007fa3191595e0 __restore_rt sigaction.c:0:0
+ #5 0x00007fa317f7a1f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007fa317f7b8e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007fa317f73266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007fa317f73312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000001a6816d llvm::CallGraphWrapperPass& llvm::Pass::getAnalysisID<llvm::CallGraphWrapperPass>(void const*) const /hdd/abhinav/llvm-project/llvm/include/llvm/PassAnalysisSupport.h:251:64
+#10 0x0000000001a67528 llvm::CallGraphWrapperPass& llvm::Pass::getAnalysis<llvm::CallGraphWrapperPass>() const /hdd/abhinav/llvm-project/llvm/include/llvm/PassAnalysisSupport.h:233:1
+#11 0x000000000425f4c4 (anonymous namespace)::ReversePostOrderFunctionAttrsLegacyPass::runOnModule(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/Transforms/IPO/FunctionAttrs.cpp:1799:63
+#12 0x000000000407d514 (anonymous namespace)::MPPassManager::runOnModule(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1554:20
+#13 0x0000000004078b98 llvm::legacy::PassManagerImpl::run(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:542:13
+#14 0x000000000407dcfd llvm::legacy::PassManager::run(llvm::Module&) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1682:1
+#15 0x0000000001a72ef1 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:1069:15
+#16 0x00007fa317f66c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#17 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+opt: /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:589: void llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*): Assertion `AnalysisPass && "Expected analysis pass to exist."' failed.
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /hdd/abhinav/llvm-project/build/bin/opt -O2 --mcpu=sm_60 --separate-const-offset-from-gep --loop-unroll --simple-loop-unswitch --dse --interleaved-load-combine --globaldce --expand-reductions --loop-extract --cost-model --partial-inliner /home/abhinav/gpgpu.bechmarks/temp_src_code.ll -o /home/abhinav/gpgpu.bechmarks/temp_src_code_opt.ll -S
+ #0 0x0000000004b94dcb llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:565:22
+ #1 0x0000000004b94e82 PrintStackTraceSignalHandler(void*) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:632:1
+ #2 0x0000000004b92e66 llvm::sys::RunSignalHandlers() /hdd/abhinav/llvm-project/llvm/lib/Support/Signals.cpp:97:20
+ #3 0x0000000004b94812 SignalHandler(int) /hdd/abhinav/llvm-project/llvm/lib/Support/Unix/Signals.inc:407:1
+ #4 0x00007ff318f535e0 __restore_rt sigaction.c:0:0
+ #5 0x00007ff317d741f7 raise (/lib64/libc.so.6+0x351f7)
+ #6 0x00007ff317d758e8 abort (/lib64/libc.so.6+0x368e8)
+ #7 0x00007ff317d6d266 __assert_fail_base (/lib64/libc.so.6+0x2e266)
+ #8 0x00007ff317d6d312 (/lib64/libc.so.6+0x2e312)
+ #9 0x0000000004078fcd llvm::PMTopLevelManager::setLastUser(llvm::ArrayRef<llvm::Pass*>, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:590:55
+#10 0x000000000407b649 llvm::PMDataManager::add(llvm::Pass*, bool) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1077:30
+#11 0x000000000407e203 llvm::FunctionPass::assignPassManager(llvm::PMStack&, llvm::PassManagerType) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1773:1
+#12 0x0000000004079e18 llvm::PMTopLevelManager::schedulePass(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:760:31
+#13 0x00000000040813ec llvm::legacy::PassManagerImpl::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:488:3
+#14 0x000000000407dcd3 llvm::legacy::PassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/lib/IR/LegacyPassManager.cpp:1676:1
+#15 0x0000000001a775b7 llvm::DebugifyCustomPassManager::add(llvm::Pass*) /hdd/abhinav/llvm-project/llvm/include/llvm/Transforms/Utils/Debugify.h:186:17
+#16 0x0000000001a6f666 addPass(llvm::legacy::PassManagerBase&, llvm::Pass*) /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:352:17
+#17 0x0000000001a72487 main /hdd/abhinav/llvm-project/llvm/tools/opt/opt.cpp:959:22
+#18 0x00007ff317d60c05 __libc_start_main (/lib64/libc.so.6+0x21c05)
+#19 0x0000000001a38aa5 _start (/hdd/abhinav/llvm-project/build/bin/opt+0x1a38aa5)
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata
+CheckModuleDebugify: Skipping module without debugify metadata

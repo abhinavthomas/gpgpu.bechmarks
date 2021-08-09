@@ -695,7 +695,7 @@ cl_program CECL_PROGRAM_WITH_BINARY(cl_context context, cl_uint num_devices,
 {
   FILE *fp;
   fp  = fopen ("/home/abhinav/gpgpu.bechmarks/OPT_PROGRAM_PTX_PATH", "a+");
-  fprintf(fp,"%s\n\n",strings);
+  fprintf(fp,"%s\n\n",*strings);
   cl_int local_err;
   cl_uint i;
   cl_program p =
