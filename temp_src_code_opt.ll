@@ -4,20 +4,25 @@ target datalayout = "e-i64:64-i128:128-v16:16-v32:32-n16:32:64"
 target triple = "nvptx64-nvidia-nvcl"
 
 ; Function Attrs: convergent mustprogress nofree noinline norecurse nounwind willreturn
-define dso_local spir_kernel void @A(float addrspace(1)* nocapture readonly %a, float addrspace(1)* nocapture readonly %b, float addrspace(1)* nocapture %c, i32 %d) local_unnamed_addr #0 !kernel_arg_addr_space !5 !kernel_arg_access_qual !6 !kernel_arg_type !7 !kernel_arg_base_type !7 !kernel_arg_type_qual !8 {
+define dso_local spir_kernel void @A(float addrspace(1)* nocapture readnone %a, float addrspace(1)* nocapture readonly %b, float addrspace(1)* nocapture %c, i32 %d) local_unnamed_addr #0 !kernel_arg_addr_space !5 !kernel_arg_access_qual !6 !kernel_arg_type !7 !kernel_arg_base_type !7 !kernel_arg_type_qual !8 {
 entry:
-  %call1 = tail call i64 @_Z13get_global_idj(i32 1) #2
-  %sext = shl i64 %call1, 32
-  %idxprom = ashr exact i64 %sext, 32
-  %arrayidx = getelementptr inbounds float, float addrspace(1)* %a, i64 %idxprom
-  %0 = load float, float addrspace(1)* %arrayidx, align 4, !tbaa !9
-  %arrayidx4 = getelementptr inbounds float, float addrspace(1)* %b, i64 %idxprom
-  %1 = load float, float addrspace(1)* %arrayidx4, align 4, !tbaa !9
-  %add5 = fadd float %0, %1
-  %conv6 = sitofp i32 %d to float
-  %add7 = fadd float %add5, %conv6
-  %arrayidx9 = getelementptr inbounds float, float addrspace(1)* %c, i64 %idxprom
-  store float %add7, float addrspace(1)* %arrayidx9, align 4, !tbaa !9
+  %call = tail call i64 @_Z13get_global_idj(i32 0) #2
+  %conv = trunc i64 %call to i32
+  %cmp.not = icmp slt i32 %conv, %d
+  br i1 %cmp.not, label %for.body.preheader, label %cleanup
+
+for.body.preheader:                               ; preds = %entry
+  %0 = load float, float addrspace(1)* %b, align 4, !tbaa !9
+  %div = fdiv float 1.000000e+00, %0, !fpmath !13
+  store float %div, float addrspace(1)* %c, align 4, !tbaa !9
+  %arrayidx.1 = getelementptr inbounds float, float addrspace(1)* %b, i64 1
+  %1 = load float, float addrspace(1)* %arrayidx.1, align 4, !tbaa !9
+  %div.1 = fdiv float 1.000000e+00, %1, !fpmath !13
+  %arrayidx5.1 = getelementptr inbounds float, float addrspace(1)* %c, i64 1
+  store float %div.1, float addrspace(1)* %arrayidx5.1, align 4, !tbaa !9
+  br label %cleanup
+
+cleanup:                                          ; preds = %for.body.preheader, %entry
   ret void
 }
 
@@ -46,3 +51,4 @@ attributes #2 = { convergent nounwind readnone willreturn }
 !10 = !{!"float", !11, i64 0}
 !11 = !{!"omnipotent char", !12, i64 0}
 !12 = !{!"Simple C/C++ TBAA"}
+!13 = !{float 2.500000e+00}
