@@ -693,10 +693,13 @@ cl_program CECL_PROGRAM_WITH_BINARY(cl_context context, cl_uint num_devices,
                                     const char **strings, const size_t *lengths,
                                     cl_int *err)
 {
+  FILE *fp;
+  fp  = fopen ("/home/abhinav/gpgpu.bechmarks/OPT_PROGRAM_PTX_PATH", "a+");
+  fprintf(fp,"%s\n\n",strings);
   cl_int local_err;
   cl_uint i;
   cl_program p =
-      clCreateProgramWithBinary(context, num_devices, device_list, lengths, (const unsigned char **)&strings, NULL, NULL);
+      clCreateProgramWithBinary(context, num_devices, device_list, lengths, (const unsigned char **)&strings, NULL, &local_err);
 
   fprintf(stderr,
           "\n[CECL] clCreateProgramWithSource\n"

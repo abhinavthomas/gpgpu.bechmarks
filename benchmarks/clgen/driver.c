@@ -210,9 +210,6 @@ int execute_kernel(char *kernel_name, const char *src, int gsize, int lsize)
 	char *source_str = load_file(ptxName, &srclen);
         cl_program program;
 	if (source_str) {
-        	FILE *fp;
-        	fp  = fopen ("/home/abhinav/gpgpu.bechmarks/OPT_PROGRAM_PTX_PATH", "a+");
-        	fprintf(fp,"%s\n\n",source_str);
 		program = CECL_PROGRAM_WITH_BINARY(context, num_devices, devices, &source_str, &srclen, &error);
 	} else {
 		srclen = strlen(src);
