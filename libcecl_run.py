@@ -53,10 +53,7 @@ def execute(command, clenv, os_env=None, record_outputs=True):
 
     os_env = run_env(clenv, os_env)
     fname_ptx = config.BASE_PATH / "temp_src_code.ptx"
-    if fname_ptx.exists():
-        os.remove(str(fname_ptx.absolute()))
- 
-    start_time = time.time()  
+    start_time = time.time()
     process = subprocess.run(command, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, env=os_env, universal_newlines=True)
     elapsed = time.time() - start_time
@@ -78,6 +75,7 @@ def execute(command, clenv, os_env=None, record_outputs=True):
     l_runs = []
     try:
         # Run and trigger an exception if it is unsuccessful
+
         subprocess.run(cmd, check=True)
         with open(fname_out, 'r') as fp:
             ir = fp.read()
@@ -88,9 +86,10 @@ def execute(command, clenv, os_env=None, record_outputs=True):
     if len(kernel_invocations) == 1:
         for v, combo in variations.items():
             passes_txt = ' '.join([f'--{p}' for p in combo])
+            if fname_ptx.exists():
+                os.remove(str(fname_ptx.absolute()))
             with open(fname_ptx, 'w') as fsrc:
                 fsrc.write(v.ptx)
-            print("optimised kernel is going to run now")
             d_k = datetime.datetime.utcnow()
             d_k = d_k.replace(microsecond=int(d_k.microsecond / 1000) * 1000)
             timestamp_k = int(d_k.strftime('%s%f')[:-3])
@@ -98,7 +97,6 @@ def execute(command, clenv, os_env=None, record_outputs=True):
             process_k = subprocess.run(command, stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE, env=os_env, universal_newlines=True)
             elapsed_k = time.time() - start_time_k
-            os.environ["OPT_PROGRAM_PTX_PATH"] = ''
             stderr_lines_k, cecl_lines_k, program_sources_k, build_options_k = SplitStderrComponents(
                 process_k.stderr)
 
@@ -109,7 +107,7 @@ def execute(command, clenv, os_env=None, record_outputs=True):
                 stderr="\n".join(
                     stderr_lines_k) if record_outputs else "",
                 cecl_log="\n".join(
-                    cecl_lines) if record_outputs else "",
+                    cecl_lines_k) if record_outputs else "",
                 kernel_invocation=KernelInvocationsFromCeclLog(
                     cecl_lines_k, expected_devtype=clenv.device_type,
                     expected_device_name=clenv.device_name),

@@ -204,7 +204,7 @@ int execute_kernel(char *kernel_name, const char *src, int gsize, int lsize)
 		fatal_CL(error, __LINE__);
 
 	// Create the program
-	size_t srclen = strlen(src);
+	size_t srclen;
 		
 	char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
 	char *source_str = load_file(ptxName, &srclen);
@@ -212,9 +212,10 @@ int execute_kernel(char *kernel_name, const char *src, int gsize, int lsize)
 	if (source_str) {
         	FILE *fp;
         	fp  = fopen ("/home/abhinav/gpgpu.bechmarks/OPT_PROGRAM_PTX_PATH", "a+");
-        	fprintf(fp,"%s,%s\n",ptxName,kernel_name);
+        	fprintf(fp,"%s\n\n",source_str);
 		program = CECL_PROGRAM_WITH_BINARY(context, num_devices, devices, &source_str, &srclen, &error);
 	} else {
+		srclen = strlen(src);
 		program = CECL_PROGRAM_WITH_SOURCE(context, 1, &src, &srclen, &error);
 	}
 	if (error != CL_SUCCESS) 
