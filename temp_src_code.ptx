@@ -6,4 +6,7 @@
 .target sm_60, texmode_independent
 .address_size 64
 
+.weak .global .align 8 .b8 _llvm_order_file_buffer[1048576];
+.weak .global .align 4 .u32 _llvm_order_file_buffer_idx;
+.global .align 1 .b8 bitmap_0;
 
