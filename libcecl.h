@@ -54,7 +54,7 @@ cl_program CECL_PROGRAM_WITH_SOURCE(cl_context context, cl_uint count,
 
 cl_program CECL_PROGRAM_WITH_BINARY(cl_context context, cl_uint num_devices,
                                     const cl_device_id *device_list,
-                                    const unsigned char **strings, const size_t *lengths,
+                                    const char **strings, const size_t *lengths,
                                     cl_int *err);
                                     
 cl_int CECL_GET_KERNEL_WORK_GROUP_INFO(cl_kernel kernel,

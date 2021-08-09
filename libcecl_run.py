@@ -11,8 +11,8 @@ import libcecl_pb2
 LIBCECL_SO = config.BASE_PATH / 'libcecl.so'
 LIBCECL_HEADER = config.BASE_PATH / 'libcecl.h'
 
-OPT = os.Path('/hdd/abhinav/llvm-project/build/bin/opt')
-LLC = os.Path('/hdd/abhinav/llvm-project/build/bin/llc')
+OPT = pathlib.Path('/hdd/abhinav/llvm-project/build/bin/opt')
+LLC = pathlib.Path('/hdd/abhinav/llvm-project/build/bin/llc')
 
 
 def run_env(clenv, os_env=None):
@@ -52,7 +52,11 @@ def execute(command, clenv, os_env=None, record_outputs=True):
     timestamp = int(d.strftime('%s%f')[:-3])
 
     os_env = run_env(clenv, os_env)
-    start_time = time.time()
+    fname_ptx = config.BASE_PATH / "temp_src_code.ptx"
+    if fname_ptx.exists():
+        os.remove(str(fname_ptx.absolute()))
+ 
+    start_time = time.time()  
     process = subprocess.run(command, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, env=os_env, universal_newlines=True)
     elapsed = time.time() - start_time
@@ -66,7 +70,7 @@ def execute(command, clenv, os_env=None, record_outputs=True):
     )
     fname = config.BASE_PATH / "temp_src_code.cl"
     fname_out = config.BASE_PATH / "temp_src_code.ll"
-    fname_ptx = config.BASE_PATH / "temp_src_code.ptx"
+    os.environ["OPT_PROGRAM_PTX_PATH"] = ''
     with open(fname, 'w') as fsrc:
         fsrc.write(''.join(program_sources))
     # Generate the command line for compiling the kernel
@@ -86,6 +90,7 @@ def execute(command, clenv, os_env=None, record_outputs=True):
             passes_txt = ' '.join([f'--{p}' for p in combo])
             with open(fname_ptx, 'w') as fsrc:
                 fsrc.write(v.ptx)
+            print("optimised kernel is going to run now")
             d_k = datetime.datetime.utcnow()
             d_k = d_k.replace(microsecond=int(d_k.microsecond / 1000) * 1000)
             timestamp_k = int(d_k.strftime('%s%f')[:-3])
@@ -93,7 +98,7 @@ def execute(command, clenv, os_env=None, record_outputs=True):
             process_k = subprocess.run(command, stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE, env=os_env, universal_newlines=True)
             elapsed_k = time.time() - start_time_k
-
+            os.environ["OPT_PROGRAM_PTX_PATH"] = ''
             stderr_lines_k, cecl_lines_k, program_sources_k, build_options_k = SplitStderrComponents(
                 process_k.stderr)
 

@@ -4,31 +4,20 @@ target datalayout = "e-i64:64-i128:128-v16:16-v32:32-n16:32:64"
 target triple = "nvptx64-nvidia-nvcl"
 
 ; Function Attrs: convergent mustprogress nofree noinline norecurse nounwind willreturn
-define dso_local spir_kernel void @A(float addrspace(1)* nocapture readonly %a, float addrspace(1)* nocapture readnone %b, float addrspace(1)* nocapture %c, i32 %d) local_unnamed_addr #0 !kernel_arg_addr_space !5 !kernel_arg_access_qual !6 !kernel_arg_type !7 !kernel_arg_base_type !7 !kernel_arg_type_qual !8 {
+define dso_local spir_kernel void @A(float addrspace(1)* nocapture readonly %a, float addrspace(1)* nocapture readonly %b, float addrspace(1)* nocapture %c, i32 %d) local_unnamed_addr #0 !kernel_arg_addr_space !5 !kernel_arg_access_qual !6 !kernel_arg_type !7 !kernel_arg_base_type !7 !kernel_arg_type_qual !8 {
 entry:
-  %call = tail call i64 @_Z13get_global_idj(i32 0) #2
-  %conv = trunc i64 %call to i32
-  %cmp = icmp slt i32 %conv, %d
-  br i1 %cmp, label %if.then, label %if.end
-
-if.then:                                          ; preds = %entry
-  %add = shl i64 %call, 32
-  %sext = add i64 %add, 8589934592
+  %call1 = tail call i64 @_Z13get_global_idj(i32 1) #2
+  %sext = shl i64 %call1, 32
   %idxprom = ashr exact i64 %sext, 32
-  %arrayidx = getelementptr inbounds float, float addrspace(1)* %c, i64 %idxprom
+  %arrayidx = getelementptr inbounds float, float addrspace(1)* %a, i64 %idxprom
   %0 = load float, float addrspace(1)* %arrayidx, align 4, !tbaa !9
-  %idxprom2 = ashr exact i64 %add, 32
-  %arrayidx3 = getelementptr inbounds float, float addrspace(1)* %c, i64 %idxprom2
-  %1 = load float, float addrspace(1)* %arrayidx3, align 4, !tbaa !9
-  %add4 = fadd float %0, %1
-  store float %add4, float addrspace(1)* %arrayidx3, align 4, !tbaa !9
-  %arrayidx6 = getelementptr inbounds float, float addrspace(1)* %a, i64 %idxprom2
-  %2 = load float, float addrspace(1)* %arrayidx6, align 4, !tbaa !9
-  %mul = fmul float %2, %2
-  store float %mul, float addrspace(1)* %arrayidx3, align 4, !tbaa !9
-  br label %if.end
-
-if.end:                                           ; preds = %if.then, %entry
+  %arrayidx4 = getelementptr inbounds float, float addrspace(1)* %b, i64 %idxprom
+  %1 = load float, float addrspace(1)* %arrayidx4, align 4, !tbaa !9
+  %add5 = fadd float %0, %1
+  %conv6 = sitofp i32 %d to float
+  %add7 = fadd float %add5, %conv6
+  %arrayidx9 = getelementptr inbounds float, float addrspace(1)* %c, i64 %idxprom
+  store float %add7, float addrspace(1)* %arrayidx9, align 4, !tbaa !9
   ret void
 }
 

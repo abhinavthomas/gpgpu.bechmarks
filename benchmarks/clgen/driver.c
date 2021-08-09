@@ -205,12 +205,17 @@ int execute_kernel(char *kernel_name, const char *src, int gsize, int lsize)
 
 	// Create the program
 	size_t srclen = strlen(src);
-	char ptxName = getenv("OPT_PROGRAM_PTX_PATH");
-	source_str = load_file(ptxName, &srclen);
+		
+	char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
+	char *source_str = load_file(ptxName, &srclen);
+        cl_program program;
 	if (source_str) {
-		cl_program program = CECL_PROGRAM_WITH_BINARY(context, num_devices, devices, &source_str, &srclen, &error);
+        	FILE *fp;
+        	fp  = fopen ("/home/abhinav/gpgpu.bechmarks/OPT_PROGRAM_PTX_PATH", "a+");
+        	fprintf(fp,"%s,%s\n",ptxName,kernel_name);
+		program = CECL_PROGRAM_WITH_BINARY(context, num_devices, devices, &source_str, &srclen, &error);
 	} else {
-		cl_program program = CECL_PROGRAM_WITH_SOURCE(context, 1, &src, &srclen, &error);
+		program = CECL_PROGRAM_WITH_SOURCE(context, 1, &src, &srclen, &error);
 	}
 	if (error != CL_SUCCESS) 
 		fatal_CL(error, __LINE__);
