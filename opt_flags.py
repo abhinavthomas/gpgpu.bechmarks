@@ -16,14 +16,14 @@ COMBOS_FILE = Path('passes_combos.txt')
 
 TESTIN_LL = config.BASE_PATH / 'temp_src_code.ll'  # Bitcode to use as input for opt
 TESTOUT_LL = config.BASE_PATH / 'temp_src_code_opt.ll'  # opt output bitcode
-TESTOUT_PTX = config.BASE_PATH / 'temp_src_code.ptx'  # output ptx
+TESTOUT_PTX = config.BASE_PATH / 'temp_bin.ptx'  # output ptx
 
 _TEST = True 
 
 if _TEST:
-    RANDOM_COMBOS_NUM = 10  # The size of the initial seed of randomly generated passes
-    FINAL_COMBOS_NUM = 20  # How many combinations to generate in total
-    COMBO_LEN = 10
+    RANDOM_COMBOS_NUM = 2  # The size of the initial seed of randomly generated passes
+    FINAL_COMBOS_NUM = 4  # How many combinations to generate in total
+    COMBO_LEN = 2 
 else:
     RANDOM_COMBOS_NUM = 200  # The size of the initial seed of randomly generated passes
     FINAL_COMBOS_NUM = 5000  # How many combinations to generate in total

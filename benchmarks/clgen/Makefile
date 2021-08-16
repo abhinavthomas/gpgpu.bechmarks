@@ -1,4 +1,4 @@
-CFLAGS ?= -I/usr/local/cuda/include/CL -I../../ -std=c99
+CFLAGS ?= -I/usr/local/cuda/include/ -I../../ -std=c99
 LDFLAGS ?= -L../../ -lOpenCL -lcecl
 default: all
 

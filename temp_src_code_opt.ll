@@ -1,4 +1,4 @@
-; ModuleID = '/home/abhinav/gpgpu.bechmarks/temp_src_code.cl'
+; ModuleID = '/home/abhinav/gpgpu.bechmarks/temp_src_code.ll'
 source_filename = "/home/abhinav/gpgpu.bechmarks/temp_src_code.cl"
 target datalayout = "e-i64:64-i128:128-v16:16-v32:32-n16:32:64"
 target triple = "nvptx64-nvidia-nvcl"
@@ -22,11 +22,11 @@ if.then:                                          ; preds = %entry
   store float 0.000000e+00, float addrspace(1)* %arrayidx, align 4, !tbaa !9
   br label %if.end
 
-if.end:                                           ; preds = %entry.if.end_crit_edge, %if.then
+if.end:                                           ; preds = %if.then, %entry.if.end_crit_edge
   %1 = phi float [ %.pre, %entry.if.end_crit_edge ], [ 0.000000e+00, %if.then ]
   %arrayidx4 = getelementptr inbounds float, float addrspace(1)* %a, i64 %conv1
   %2 = load float, float addrspace(1)* %arrayidx4, align 4, !tbaa !9
-  %add = fadd float %2, %1
+  %add = fadd float %1, %2
   %arrayidx8 = getelementptr inbounds float, float addrspace(1)* %c, i64 %conv1
   store float %add, float addrspace(1)* %arrayidx8, align 4, !tbaa !9
   ret void
@@ -35,8 +35,8 @@ if.end:                                           ; preds = %entry.if.end_crit_e
 ; Function Attrs: convergent mustprogress nofree nounwind readnone willreturn
 declare dso_local i64 @_Z13get_global_idj(i32) local_unnamed_addr #1
 
-attributes #0 = { convergent mustprogress nofree noinline norecurse nounwind willreturn "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+ptx32,+sm_20" "uniform-work-group-size"="false" }
-attributes #1 = { convergent mustprogress nofree nounwind readnone willreturn "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+ptx32,+sm_20" }
+attributes #0 = { convergent mustprogress nofree noinline norecurse nounwind willreturn "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="sm_60" "target-features"="+ptx32,+sm_20" "uniform-work-group-size"="false" }
+attributes #1 = { convergent mustprogress nofree nounwind readnone willreturn "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="sm_60" "target-features"="+ptx32,+sm_20" }
 attributes #2 = { convergent nounwind readnone willreturn }
 
 !nvvm.annotations = !{!0}

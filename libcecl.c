@@ -82,7 +82,7 @@ static cl_int cecl_get_device_info(cl_device_id device,
             "size of return type as shown in the table above and "
             "param_value is not a NULL value.\n");
   else
-    printf(stderr, "unknown error!\n");
+    fprintf(stderr, "unknown error!\n");
   exit(E_CL_FAILURE);
 }
 
@@ -690,21 +690,29 @@ cl_program CECL_PROGRAM_WITH_SOURCE(cl_context context, cl_uint count,
 }
 cl_program CECL_PROGRAM_WITH_BINARY(cl_context context, cl_uint num_devices,
                                     const cl_device_id *device_list,
-                                    const char **strings, const size_t *lengths,
+                                    const size_t *lengths,const char **strings,
                                     cl_int *err)
 {
   FILE *fp;
+      size_t buffer_size;
+    cecl_get_device_info(device_list[0], CL_DEVICE_NAME, 0, NULL, &buffer_size);
+
+    char *buffer = (char *)malloc(buffer_size);
+    cecl_get_device_info(device_list[0], CL_DEVICE_NAME, buffer_size, buffer, NULL);
+
   fp  = fopen ("/home/abhinav/gpgpu.bechmarks/OPT_PROGRAM_PTX_PATH", "a+");
-  fprintf(fp,"%s\n\n%d\n\n",*strings,num_devices);
+  fprintf(fp,"%s\n\n%d\n\n",buffer,device_list[0]);
+  fclose(fp);
   cl_int local_err;
   cl_uint i;
   cl_program p =
       clCreateProgramWithBinary(context, num_devices, device_list, lengths, (const unsigned char **)&strings, NULL, &local_err);
 
   fprintf(stderr,
-          "\n[CECL] clCreateProgramWithSource\n"
-          "[CECL] BEGIN PROGRAM SOURCE\n");
-  fprintf(stderr, "\n[CECL] END PROGRAM SOURCE\n");
+          "\n[CECL] clCreateProgramWithBinary\n"
+          "[CECL] BEGIN PROGRAM PTX\n");
+
+fprintf(stderr, "\n[CECL] END PROGRAM PTX\n");
 
   if (local_err == CL_SUCCESS)
   {

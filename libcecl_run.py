@@ -50,7 +50,6 @@ def execute(command, clenv, os_env=None, record_outputs=True):
     d = datetime.datetime.utcnow()
     d = d.replace(microsecond=int(d.microsecond / 1000) * 1000)
     timestamp = int(d.strftime('%s%f')[:-3])
-
     os_env = run_env(clenv, os_env)
     fname_ptx = config.BASE_PATH / "temp_src_code.ptx"
     start_time = time.time()
@@ -67,7 +66,6 @@ def execute(command, clenv, os_env=None, record_outputs=True):
     )
     fname = config.BASE_PATH / "temp_src_code.cl"
     fname_out = config.BASE_PATH / "temp_src_code.ll"
-    os.environ["OPT_PROGRAM_PTX_PATH"] = ''
     with open(fname, 'w') as fsrc:
         fsrc.write(''.join(program_sources))
     # Generate the command line for compiling the kernel
