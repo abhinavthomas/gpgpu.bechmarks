@@ -34,12 +34,6 @@ message LibceclExecutableRun {
   optional bytes ptx=13;
 }
 
-//Recording multiple execution runs without retriggering opt
-message ExecutionRun{
-  required int32 returncode = 1;
-  repeated LibceclExecutableRun runs = 2;
-}
-
 // A single kernel invocation event.
 message OpenClKernelInvocation {
   required string kernel_name = 1;
