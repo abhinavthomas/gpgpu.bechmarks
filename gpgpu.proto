@@ -16,6 +16,11 @@
 syntax = "proto2";
 import "libcecl.proto";
 
+message ExecutionRun{
+  required int32 returncode = 1;
+  repeated LibceclExecutableRun runs = 2;
+}
+
 // Recording of a single benchmark execution.
 message BenchmarkRun {
   required string hostname = 1;
