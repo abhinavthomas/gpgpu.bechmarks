@@ -23,5 +23,5 @@ message BenchmarkRun {
   required string benchmark_suite = 3;
   required string benchmark_name = 4;
   required string dataset_name = 5;
-  repeated LibceclExecutableRun runs = 6;
+  repeated ExecutionRun run = 6;
 }
