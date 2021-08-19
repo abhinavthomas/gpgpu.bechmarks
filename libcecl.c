@@ -700,13 +700,10 @@ cl_program CECL_PROGRAM_WITH_BINARY(cl_context context, cl_uint num_devices,
     char *buffer = (char *)malloc(buffer_size);
     cecl_get_device_info(device_list[0], CL_DEVICE_NAME, buffer_size, buffer, NULL);
 
-  fp  = fopen ("/home/abhinav/gpgpu.bechmarks/OPT_PROGRAM_PTX_PATH", "a+");
-  fprintf(fp,"%s\n\n%d\n\n",buffer,device_list[0]);
-  fclose(fp);
   cl_int local_err;
   cl_uint i;
   cl_program p =
-      clCreateProgramWithBinary(context, num_devices, device_list, lengths, (const unsigned char **)&strings, NULL, &local_err);
+      clCreateProgramWithBinary(context, num_devices, device_list, lengths, (const unsigned char **)strings, NULL, &local_err);
 
   fprintf(stderr,
           "\n[CECL] clCreateProgramWithBinary\n"
@@ -738,7 +735,7 @@ fprintf(stderr, "\n[CECL] END PROGRAM PTX\n");
             "there is a failure to allocate resources required "
             "by the OpenCL implementation on the host.\n");
   else
-    fprintf(stderr, "unknown error code!\n");
+    fprintf(stderr, "clcreateprogramwithbinary: unknown error code:%d!\n",local_err);
   exit(E_CL_FAILURE);
 }
 
@@ -818,7 +815,7 @@ cl_int cecl_program(cl_program program, cl_uint num_devices,
             "there is a failure to allocate resources required by "
             "the OpenCL implementation on the host.\n");
   else
-    fprintf(stderr, "unknown err code!\n");
+    fprintf(stderr, "clBuildProgram: unknown err code:%d!\n",err);
   exit(E_CL_FAILURE);
 }
 
@@ -863,7 +860,7 @@ cl_kernel cecl_kernel(cl_program program, const char *program_name,
             "there is a failure to allocate resources required by "
             "the OpenCL implementation on the host.\n");
   else
-    fprintf(stderr, "unknown error!\n");
+    fprintf(stderr, "clcreatekernel: unknown error!%d\n",local_err);
   exit(E_CL_FAILURE);
 }
 
@@ -900,7 +897,7 @@ cl_int cecl_create_kernels_in_program(cl_program program,
             "there is a failure to allocate resources required by "
             "the OpenCL implementation on the host.\n");
   else
-    fprintf(stderr, "unknown error!\n");
+    fprintf(stderr, "createkernelsinprogram: unknown error!%d\n",local_err);
   exit(E_CL_FAILURE);
 }
 
@@ -958,7 +955,7 @@ cl_int cecl_write_buffer(cl_command_queue command_queue, cl_mem buffer,
             "there is a failure to allocate resources required by "
             "the OpenCL implementation on the host.\n");
   else
-    fprintf(stderr, "unknown error!\n");
+    fprintf(stderr, "cecl_write_buffer: unknown error!:%d\n",err);
   exit(E_CL_FAILURE);
 }
 
@@ -1005,7 +1002,7 @@ cl_int cecl_set_kernel_arg(cl_kernel kernel, cl_uint arg_index, size_t arg_size,
             "the __local qualifier or if the argument is a sampler and "
             "arg_size != sizeof(cl_sampler).\n");
   else
-    fprintf(stderr, "unknown error!\n");
+    fprintf(stderr, "kernel arg set: unknown error!:%d\n",err);
   exit(E_CL_FAILURE);
 }
 
@@ -1062,7 +1059,7 @@ cl_mem cecl_buffer(cl_context context, cl_mem_flags flags, size_t size,
             "there is a failure to allocate resources required "
             "by the OpenCL implementation on the host.\n");
   else
-    fprintf(stderr, "unknown error!\n");
+    fprintf(stderr, "cecl_buffer: unknown error!:%d\n",local_err);
   exit(E_CL_FAILURE);
 }
 
@@ -1141,7 +1138,7 @@ cl_int cecl_read_buffer(cl_command_queue command_queue, cl_mem buffer,
             "there is a failure to allocate resources required by "
             "the OpenCL implementation on the host.\n");
   else
-    fprintf(stderr, "unknown error!\n");
+    fprintf(stderr, "read buffer: unknown error!:%d\n",err);
   exit(E_CL_FAILURE);
 }
 
@@ -1214,6 +1211,6 @@ void *cecl_map_buffer(cl_command_queue command_queue, cl_mem buffer,
             "there is a failure to allocate resources required by "
             "the OpenCL implementation on the host.\n");
   else
-    fprintf(stderr, "unknown error!\n");
+    fprintf(stderr, "map buffer unknown error!:%d\n",*errcode_ret);
   exit(E_CL_FAILURE);
 }

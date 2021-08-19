@@ -31,7 +31,7 @@ message LibceclExecutableRun {
   required string ir=10;
   repeated LibceclExecutableRun opt_runs = 11;
   optional string opt_passes=12;
-  optional string ptx=13;
+  optional bytes ptx=13;
 }
 
 // A single kernel invocation event.

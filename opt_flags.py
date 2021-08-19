@@ -10,20 +10,22 @@ import config
 
 OPT = Path('/hdd/abhinav/llvm-project/build/bin/opt')
 LLC = Path('/hdd/abhinav/llvm-project/build/bin/llc')
+LLL = Path('/hdd/abhinav/llvm-project/build/bin/llvm-link')
 
-PASSES_FILE = Path('passes.txt')  # Where the valid passes will be saved
-COMBOS_FILE = Path('passes_combos.txt')
+PASSES_FILE = config.BASE_PATH / 'passes.txt'  # Where the valid passes will be saved
+COMBOS_FILE = config.BASE_PATH / 'passes_combos.txt'
 
 TESTIN_LL = config.BASE_PATH / 'temp_src_code.ll'  # Bitcode to use as input for opt
 TESTOUT_LL = config.BASE_PATH / 'temp_src_code_opt.ll'  # opt output bitcode
+LIBCLC_HELPER_LL = config.BASE_PATH / 'helper.ll'  # libclc helper for emitting proper ptx
 TESTOUT_PTX = config.BASE_PATH / 'temp_bin.ptx'  # output ptx
 
-_TEST = True 
+_TEST = False 
 
 if _TEST:
-    RANDOM_COMBOS_NUM = 2  # The size of the initial seed of randomly generated passes
-    FINAL_COMBOS_NUM = 4  # How many combinations to generate in total
-    COMBO_LEN = 2 
+    RANDOM_COMBOS_NUM = 10  # The size of the initial seed of randomly generated passes
+    FINAL_COMBOS_NUM = 20  # How many combinations to generate in total
+    COMBO_LEN = 5 
 else:
     RANDOM_COMBOS_NUM = 200  # The size of the initial seed of randomly generated passes
     FINAL_COMBOS_NUM = 5000  # How many combinations to generate in total
@@ -66,8 +68,17 @@ class Version(object):
             #print(f'Failed1: {self.passes}')
             return False
         return True
-
+    def _link(self):
+        cmd_lll = [LLL,TESTOUT_LL,LIBCLC_HELPER_LL,'-o',TESTOUT_LL,'-S']
+        try:
+            res = subprocess.run(cmd_lll, check=True, universal_newlines=True)
+        except subprocess.CalledProcessError as ex:
+            #print(f'Failed2: {self.passes}')
+            return False
+        return True
+ 
     def _compile(self):
+        self._link()
         cmd_llc = [LLC, '-O2', '--mcpu=sm_60', TESTOUT_LL, '-o', TESTOUT_PTX]
         try:
             res = subprocess.run(cmd_llc, check=True, universal_newlines=True)
@@ -93,11 +104,11 @@ class Version(object):
         self.md5hash = hash_md5.hexdigest()
 
     def _load_ir(self):
-        with open(TESTOUT_LL) as f:
+        with open(TESTOUT_LL,'rb') as f:
             self.ir = f.read()
 
     def _load_ptx(self):
-        with open(TESTOUT_PTX) as f:
+        with open(TESTOUT_PTX,'rb') as f:
             self.ptx = f.read()
 
 

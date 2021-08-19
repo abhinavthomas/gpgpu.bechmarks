@@ -13,6 +13,7 @@ LIBCECL_HEADER = config.BASE_PATH / 'libcecl.h'
 
 OPT = pathlib.Path('/hdd/abhinav/llvm-project/build/bin/opt')
 LLC = pathlib.Path('/hdd/abhinav/llvm-project/build/bin/llc')
+LLL = pathlib.Path('/hdd/abhinav/llvm-project/build/bin/llvm-link')
 
 def run_env(clenv, os_env=None):
     """Return an execution environment for a libcecl benchmark."""
@@ -76,28 +77,35 @@ def execute(command, clenv, os_env=None, record_outputs=True):
         subprocess.run(cmd, check=True)
         with open(fname_out, 'r') as fp:
             ir = fp.read()
-        variations = opt_flags.main()
+        
     except subprocess.CalledProcessError as e:
         print("error", cmd, e)
         raise e
-    if len(kernel_invocations) == 1:
-        for v, combo in variations.items():
-            passes_txt = ' '.join([f'--{p}' for p in combo])
-            if fname_ptx.exists():
-                os.remove(str(fname_ptx.absolute()))
-            with open(fname_ptx, 'wb') as fsrc:
-                fsrc.write(v.ptx)
-            d_k = datetime.datetime.utcnow()
-            d_k = d_k.replace(microsecond=int(d_k.microsecond / 1000) * 1000)
-            timestamp_k = int(d_k.strftime('%s%f')[:-3])
-            start_time_k = time.time()
-            process_k = subprocess.run(command, stdout=subprocess.PIPE,
+    helper = config.BASE_PATH / "helper.ll"
+    try:
+        subprocess.run([LLL,fname_out,helper,"-o",fname_out], check=True, universal_newlines=True)
+    except subprocess.CalledProcessError as ex:
+        return False
+    cmd_llc = [LLC, '-O2', '--mcpu=sm_60', fname_out, '-o', fname_ptx]
+    try:
+        res = subprocess.run(cmd_llc, check=True, universal_newlines=True)
+        with open(fname_ptx,'r') as fp:
+            ptx = fp.read()
+    except subprocess.CalledProcessError as ex:
+            #print(f'Failed2: {self.passes}')
+        return False
+     
+    d_k = datetime.datetime.utcnow()
+    d_k = d_k.replace(microsecond=int(d_k.microsecond / 1000) * 1000)
+    timestamp_k = int(d_k.strftime('%s%f')[:-3])
+    start_time_k = time.time()
+    process_k = subprocess.run(command, stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE, env=os_env, universal_newlines=True)
-            elapsed_k = time.time() - start_time_k
-            stderr_lines_k, cecl_lines_k, program_sources_k, build_options_k = SplitStderrComponents(
+    elapsed_k = time.time() - start_time_k
+    stderr_lines_k, cecl_lines_k, program_sources_k, build_options_k = SplitStderrComponents(
                 process_k.stderr)
 
-            l_runs.append(libcecl_pb2.LibceclExecutableRun(
+    l_runs.append(libcecl_pb2.LibceclExecutableRun(
                 ms_since_unix_epoch=timestamp_k,
                 returncode=process_k.returncode,
                 stdout=process_k.stdout if record_outputs else "",
@@ -111,8 +119,9 @@ def execute(command, clenv, os_env=None, record_outputs=True):
                 elapsed_time_ns=int(
                     elapsed_k * 1e9),
                 opencl_program_source=program_sources_k,
-                opencl_build_options=build_options_k, ir=v.ir,
-                opt_passes=passes_txt, ptx=v.ptx))
+                opencl_build_options=build_options_k, ir=ir,
+                opt_passes='passes_txt', ptx=ptx))
+   
     main_run = libcecl_pb2.LibceclExecutableRun(
         ms_since_unix_epoch=timestamp,
         returncode=process.returncode,

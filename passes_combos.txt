@@ -1,20 +1,20 @@
 
---metarenamer
 --memprof
---memprof --break-crit-edges --metarenamer
 --internalize
---internalize --metarenamer
---internalize --memprof
---internalize --instrorderfile
 --instrorderfile
---memprof --memprof
---metarenamer --metarenamer
---metarenamer --memprof
---metarenamer --memprof --break-crit-edges --metarenamer
---metarenamer --internalize --metarenamer
---metarenamer --internalize --memprof
---metarenamer --internalize --instrorderfile
+--structurizecfg
+--metarenamer
+--structurizecfg --instrorderfile
+--instnamer --metarenamer
 --metarenamer --instrorderfile
---metarenamer --memprof --memprof
+--instrorderfile --globalopt
+--memprof --memprof
+--memprof --instrorderfile
+--memprof --structurizecfg
 --memprof --metarenamer
---memprof --memprof --break-crit-edges --metarenamer
+--memprof --structurizecfg --instrorderfile
+--memprof --instnamer --metarenamer
+--memprof --metarenamer --instrorderfile
+--memprof --instrorderfile --globalopt
+--instrorderfile --memprof
+--instrorderfile --instrorderfile
