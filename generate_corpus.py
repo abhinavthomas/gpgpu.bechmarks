@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-# Copyright 2016, 2017 Chris Cummins <chrisc.101@gmail.com>.
+# Copyright 2016, 2017 Chris Chris Cummins <chrisc.101@gmail.com>
+# Modified by: Abhinav Thomas <abhinavthomas@gmail.com>.
 # Copyright 2020 Pavlos Petoumenos <pavlos.petoumenos@manchester.ac.uk
 #
 # This file is derived from CLgen.

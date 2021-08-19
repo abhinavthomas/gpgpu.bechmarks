@@ -1,4 +1,5 @@
-# Copyright 2014-2020 Chris Cummins <chrisc.101@gmail.com>.
+# Copyright 2014-2020 Chris Chris Cummins <chrisc.101@gmail.com>
+# Modified by: Abhinav Thomas <abhinavthomas@gmail.com>.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
