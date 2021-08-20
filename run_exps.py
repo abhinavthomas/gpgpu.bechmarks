@@ -360,7 +360,7 @@ class _BenchmarkSuite(object):
                 benchmark_suite=self.name,
                 benchmark_name=benchmark_name,
                 dataset_name=dataset_name,
-                runs=libcecl_log,
+                run=libcecl_log,
             )
 
             should_continue = True

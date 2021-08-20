@@ -25,7 +25,6 @@ canonicalize-aliases
 cfl-anders-aa
 cfl-steens-aa
 cg-profile
-check-debugify
 codegenprepare
 consthoist
 constmerge

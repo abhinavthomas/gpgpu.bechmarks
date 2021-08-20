@@ -19,8 +19,8 @@ TESTIN_LL = config.BASE_PATH / 'temp_src_code.ll'  # Bitcode to use as input for
 TESTOUT_LL = config.BASE_PATH / 'temp_src_code_opt.ll'  # opt output bitcode
 LIBCLC_HELPER_LL = config.BASE_PATH / 'helper.ll'  # libclc helper for emitting proper ptx
 TESTOUT_PTX = config.BASE_PATH / 'temp_bin.ptx'  # output ptx
-
-_TEST = False 
+ERROR_PASS_FILE = config.BASE_PATH / 'error_passes.txt'
+_TEST = True
 
 if _TEST:
     RANDOM_COMBOS_NUM = 10  # The size of the initial seed of randomly generated passes
@@ -63,7 +63,11 @@ class Version(object):
         cmd_opt = [OPT, '-O2', '--mcpu=sm_60'] + \
             passes_txt + [TESTIN_LL, '-o', TESTOUT_LL, '-S']
         try:
-            res = subprocess.run(cmd_opt, check=True, universal_newlines=True)
+            res = subprocess.run(cmd_opt, check=True, universal_newlines=True, timeout=3)
+        except subprocess.TimeoutExpired as err:
+            with open(ERROR_PASS_FILE,'a') as fp:
+                fp.write(' '.join(passes_txt)+'\n')
+            return False
         except subprocess.CalledProcessError as ex:
             #print(f'Failed1: {self.passes}')
             return False
