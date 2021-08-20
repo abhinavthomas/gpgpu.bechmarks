@@ -25,7 +25,7 @@ _TEST = True
 if _TEST:
     RANDOM_COMBOS_NUM = 10  # The size of the initial seed of randomly generated passes
     FINAL_COMBOS_NUM = 20  # How many combinations to generate in total
-    COMBO_LEN = 5 
+    COMBO_LEN = 10 
 else:
     RANDOM_COMBOS_NUM = 200  # The size of the initial seed of randomly generated passes
     FINAL_COMBOS_NUM = 5000  # How many combinations to generate in total
@@ -60,34 +60,41 @@ class Version(object):
 
     def _optimize(self):
         passes_txt = [f'--{p}' for p in self.passes]
+        #print(f"Trying optimisation with {passes_txt}...")
         cmd_opt = [OPT, '-O2', '--mcpu=sm_60'] + \
             passes_txt + [TESTIN_LL, '-o', TESTOUT_LL, '-S']
         try:
-            res = subprocess.run(cmd_opt, check=True, universal_newlines=True, timeout=3)
+            res = subprocess.run(cmd_opt, check=True, universal_newlines=True, timeout=10)
         except subprocess.TimeoutExpired as err:
             with open(ERROR_PASS_FILE,'a') as fp:
                 fp.write(' '.join(passes_txt)+'\n')
             return False
         except subprocess.CalledProcessError as ex:
-            #print(f'Failed1: {self.passes}')
+            print(f'Failed1: {self.passes}')
             return False
         return True
     def _link(self):
+        #print("Linking.....")
         cmd_lll = [LLL,TESTOUT_LL,LIBCLC_HELPER_LL,'-o',TESTOUT_LL,'-S']
         try:
             res = subprocess.run(cmd_lll, check=True, universal_newlines=True)
         except subprocess.CalledProcessError as ex:
-            #print(f'Failed2: {self.passes}')
+            print(f'Failed2: {self.passes}')
             return False
         return True
  
     def _compile(self):
         self._link()
+        #print("Compiling...")
         cmd_llc = [LLC, '-O2', '--mcpu=sm_60', TESTOUT_LL, '-o', TESTOUT_PTX]
         try:
-            res = subprocess.run(cmd_llc, check=True, universal_newlines=True)
+            res = subprocess.run(cmd_llc, check=True, universal_newlines=True, timeout=10)
+        except subprocess.TimeoutExpired as err:
+            with open(ERROR_PASS_FILE,'a') as fp:
+                fp.write(' '.join([f'--{p}' for p in self.passes])+'\n')
+            return False
         except subprocess.CalledProcessError as ex:
-            #print(f'Failed2: {self.passes}')
+            print(f'Failed2: {self.passes}')
             return False
         return True
 
@@ -101,18 +108,20 @@ class Version(object):
         self.valid = True
 
     def _calculate_hash(self):
+        #print(f"Started calculating hash...")
         hash_md5 = hashlib.md5()
         with open(TESTOUT_PTX, 'rb') as f:
             for chunk in iter(lambda: f.read(4096), b""):
                 hash_md5.update(chunk)
         self.md5hash = hash_md5.hexdigest()
+        #print(f"Finished calculating hash...")
 
     def _load_ir(self):
-        with open(TESTOUT_LL,'rb') as f:
+        with open(TESTOUT_LL,'r') as f:
             self.ir = f.read()
 
     def _load_ptx(self):
-        with open(TESTOUT_PTX,'rb') as f:
+        with open(TESTOUT_PTX,'r') as f:
             self.ptx = f.read()
 
 
@@ -296,7 +305,9 @@ def repeat_combinations(combos):
 def generate_combinations(passes):
     '''Start from a random seed of passes and keep reducing
     and repeating until we have any combinations'''
+    print("Gen rand combos")
     combos = generate_random_combinations(passes)
+    print("Reduce rand combo")
     combos = reduce_combinations(combos)
 
     while len(combos) < FINAL_COMBOS_NUM:

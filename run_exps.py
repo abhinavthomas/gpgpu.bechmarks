@@ -351,7 +351,7 @@ class _BenchmarkSuite(object):
         with self.RunEnv(executable.parent) as os_env:
             # Add the additional environment variables.
             os_env.update(extra_env)
-
+            print(f"Benchmark:{benchmark_name}, dataset:{dataset_name}")
             libcecl_log = libcecl_run.execute(
                 command, self.env, os_env, record_outputs=_RECORD_OUTPUTS)
             log = gpgpu_pb2.BenchmarkRun(

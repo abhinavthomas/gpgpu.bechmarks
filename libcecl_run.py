@@ -85,7 +85,7 @@ def execute(command, clenv, os_env=None, record_outputs=True):
             passes_txt = ' '.join([f'--{p}' for p in combo])
             if fname_ptx.exists():
                 os.remove(str(fname_ptx.absolute()))
-            with open(fname_ptx, 'wb') as fsrc:
+            with open(fname_ptx, 'w') as fsrc:
                 fsrc.write(v.ptx)
             d_k = datetime.datetime.utcnow()
             d_k = d_k.replace(microsecond=int(
