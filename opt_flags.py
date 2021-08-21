@@ -20,15 +20,15 @@ TESTOUT_LL = config.BASE_PATH / 'temp_src_code_opt.ll'  # opt output bitcode
 LIBCLC_HELPER_LL = config.BASE_PATH / 'helper.ll'  # libclc helper for emitting proper ptx
 TESTOUT_PTX = config.BASE_PATH / 'temp_bin.ptx'  # output ptx
 ERROR_PASS_FILE = config.BASE_PATH / 'error_passes.txt'
-_TEST = True
+_TEST = True 
 
 if _TEST:
     RANDOM_COMBOS_NUM = 10  # The size of the initial seed of randomly generated passes
-    FINAL_COMBOS_NUM = 20  # How many combinations to generate in total
+    FINAL_COMBOS_NUM = 25  # How many combinations to generate in total
     COMBO_LEN = 10 
 else:
     RANDOM_COMBOS_NUM = 200  # The size of the initial seed of randomly generated passes
-    FINAL_COMBOS_NUM = 5000  # How many combinations to generate in total
+    FINAL_COMBOS_NUM = 2000  # How many combinations to generate in total
     COMBO_LEN = 50
 
 

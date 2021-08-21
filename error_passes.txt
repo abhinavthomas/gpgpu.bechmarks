@@ -1,0 +1,2 @@
+--loop-reduce --scev-aa --loop-unroll --instcombine --loop-idiom --memoryssa --speculative-execution --ipsccp --instsimplify --coro-elide
+--structurizecfg --globalopt --hardware-loops --deadargelim --attributor-cgscc --scev-aa --memdep --interleaved-load-combine --loop-reduce --lcssa

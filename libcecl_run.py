@@ -51,6 +51,8 @@ def execute(command, clenv, os_env=None, record_outputs=True):
     timestamp = int(d.strftime('%s%f')[:-3])
     os_env = run_env(clenv, os_env)
     fname_ptx = config.BASE_PATH / "temp_src_code.ptx"
+    if fname_ptx.exists():
+        os.remove(str(fname_ptx.absolute()))
     start_time = time.time()
     process = subprocess.run(command, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, env=os_env, universal_newlines=True)
@@ -64,6 +66,7 @@ def execute(command, clenv, os_env=None, record_outputs=True):
         expected_device_name=clenv.device_name,
     )
     ir = ''
+    l_runs = []
     if len(kernel_invocations) > 0:
         fname = config.BASE_PATH / "temp_src_code.cl"
         fname_out = config.BASE_PATH / "temp_src_code.ll"
@@ -71,7 +74,6 @@ def execute(command, clenv, os_env=None, record_outputs=True):
             fsrc.write(''.join(program_sources))
         # Generate the command line for compiling the kernel
         cmd = build_cmd(fname, build_options)
-        l_runs = []
         try:
             # Run and trigger an exception if it is unsuccessful
 

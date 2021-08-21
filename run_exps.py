@@ -917,4 +917,4 @@ def main(bmark_suites, gpgpu_envs, repeats, logdir):
 
 if __name__ == "__main__":
     env_names = ['GPU|NVIDIA CUDA|Quadro GP100|384.111|1.2']
-    main(config.BENCHMARK_SUITE_NAMES[1:3], env_names, 1, config.LOGS_PATH)
+    main(config.BENCHMARK_SUITE_NAMES[2:3], env_names, 1, config.LOGS_PATH)

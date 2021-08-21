@@ -1,0 +1,25 @@
+--memprof
+
+--metarenamer
+--internalize
+--instrorderfile
+--reg2mem --metarenamer
+--instrorderfile --loweratomic
+--reg2mem --instrorderfile
+--memprof --instrorderfile
+--metarenamer --metarenamer
+--memprof --memprof
+--memprof --metarenamer
+--memprof --reg2mem --metarenamer
+--memprof --instrorderfile --loweratomic
+--memprof --reg2mem --instrorderfile
+--memprof --memprof --instrorderfile
+--memprof --metarenamer --metarenamer
+--metarenamer --memprof
+--metarenamer --instrorderfile
+--metarenamer --reg2mem --metarenamer
+--metarenamer --instrorderfile --loweratomic
+--metarenamer --reg2mem --instrorderfile
+--metarenamer --memprof --instrorderfile
+--metarenamer --metarenamer --metarenamer
+--instrorderfile --memprof
