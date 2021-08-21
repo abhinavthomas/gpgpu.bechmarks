@@ -84,39 +84,40 @@ def execute(command, clenv, os_env=None, record_outputs=True):
         except subprocess.CalledProcessError as e:
             print("error", cmd, e)
             raise e
-        for v, combo in variations.items():
-            passes_txt = ' '.join([f'--{p}' for p in combo])
-            if fname_ptx.exists():
-                os.remove(str(fname_ptx.absolute()))
-            with open(fname_ptx, 'w') as fsrc:
-                fsrc.write(v.ptx)
-            d_k = datetime.datetime.utcnow()
-            d_k = d_k.replace(microsecond=int(
-                d_k.microsecond / 1000) * 1000)
-            timestamp_k = int(d_k.strftime('%s%f')[:-3])
-            start_time_k = time.time()
-            process_k = subprocess.run(command, stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE, env=os_env, universal_newlines=True)
-            elapsed_k = time.time() - start_time_k
-            stderr_lines_k, cecl_lines_k, program_sources_k, build_options_k = SplitStderrComponents(
-                process_k.stderr)
+        for i in range(10):
+            for v, combo in variations.items():
+                passes_txt = ' '.join([f'--{p}' for p in combo])
+                if fname_ptx.exists():
+                    os.remove(str(fname_ptx.absolute()))
+                with open(fname_ptx, 'w') as fsrc:
+                    fsrc.write(v.ptx)
+                d_k = datetime.datetime.utcnow()
+                d_k = d_k.replace(microsecond=int(
+                    d_k.microsecond / 1000) * 1000)
+                timestamp_k = int(d_k.strftime('%s%f')[:-3])
+                start_time_k = time.time()
+                process_k = subprocess.run(command, stdout=subprocess.PIPE,
+                                           stderr=subprocess.PIPE, env=os_env, universal_newlines=True)
+                elapsed_k = time.time() - start_time_k
+                stderr_lines_k, cecl_lines_k, program_sources_k, build_options_k = SplitStderrComponents(
+                    process_k.stderr)
 
-            l_runs.append(libcecl_pb2.LibceclExecutableRun(
-                ms_since_unix_epoch=timestamp_k,
-                returncode=process_k.returncode,
-                stdout=process_k.stdout if record_outputs else "",
-                stderr="\n".join(
-                    stderr_lines_k) if record_outputs else "",
-                cecl_log="\n".join(
-                    cecl_lines_k) if record_outputs else "",
-                kernel_invocation=KernelInvocationsFromCeclLog(
-                    cecl_lines_k, expected_devtype=clenv.device_type,
-                    expected_device_name=clenv.device_name),
-                elapsed_time_ns=int(
-                    elapsed_k * 1e9),
-                opencl_program_source=program_sources_k,
-                opencl_build_options=build_options_k, ir=v.ir,
-                opt_passes=passes_txt, ptx=v.ptx))
+                l_runs.append(libcecl_pb2.LibceclExecutableRun(
+                    ms_since_unix_epoch=timestamp_k,
+                    returncode=process_k.returncode,
+                    stdout=process_k.stdout if record_outputs else "",
+                    stderr="\n".join(
+                        stderr_lines_k) if record_outputs else "",
+                    cecl_log="\n".join(
+                        cecl_lines_k) if record_outputs else "",
+                    kernel_invocation=KernelInvocationsFromCeclLog(
+                        cecl_lines_k, expected_devtype=clenv.device_type,
+                        expected_device_name=clenv.device_name),
+                    elapsed_time_ns=int(
+                        elapsed_k * 1e9),
+                    opencl_program_source=program_sources_k,
+                    opencl_build_options=build_options_k, ir=v.ir,
+                    opt_passes=passes_txt, ptx=v.ptx))
     main_run = libcecl_pb2.LibceclExecutableRun(
         ms_since_unix_epoch=timestamp,
         returncode=process.returncode,
