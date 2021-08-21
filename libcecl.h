@@ -30,6 +30,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
+char * load_file(char *fname, size_t *len);
 cl_context CECL_CREATE_CONTEXT(cl_context_properties* properties,
                                cl_uint num_devices, const cl_device_id* devices,
                                void* pfn_notify(const char* errinfo,

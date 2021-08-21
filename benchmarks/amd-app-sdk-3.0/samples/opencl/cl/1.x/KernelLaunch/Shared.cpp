@@ -1,11 +1,11 @@
 #include <libcecl.h>
 /**********************************************************************
-Copyright ©2015 Advanced Micro Devices, Inc. All rights reserved.
+Copyright ï¿½2015 Advanced Micro Devices, Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-•	Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-•	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or
+ï¿½	Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ï¿½	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or
  other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -290,8 +290,13 @@ void initCL( char *kernel_file )
    	    exit(FAILURE); 
     }
     
-
-    program = CECL_PROGRAM_WITH_SOURCE( context,
+	size_t srclen;
+	char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
+	const char *source_str = load_file(ptxName, &srclen);
+	if (source_str)
+		program = CECL_PROGRAM_WITH_BINARY(context, 1, devices, &srclen, &source_str, NULL);
+	else 
+        program = CECL_PROGRAM_WITH_SOURCE( context,
                                          1,
                                          &kernel_source,
                                          &size, 

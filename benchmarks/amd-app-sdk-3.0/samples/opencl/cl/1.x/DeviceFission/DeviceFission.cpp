@@ -1,11 +1,11 @@
 #include <libcecl.h>
 /**********************************************************************
-Copyright ©2015 Advanced Micro Devices, Inc. All rights reserved.
+Copyright ï¿½2015 Advanced Micro Devices, Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-•   Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-•   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or
+ï¿½   Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ï¿½   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or
  other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -291,22 +291,32 @@ DeviceFission::setupCLRuntime()
         }
         const char * source = kernelFile.source().c_str();
         size_t sourceSize[] = {strlen(source)};
-
+        
+        char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
+        size_t srclen;
+        const char *source_str = load_file(ptxName, &srclen);
+        if (source_str){
+            subProgram = CECL_PROGRAM_WITH_BINARY(rContext, 1, subDevices, &srclen, &source_str, &status);
+            CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_BINARY failed.(subProgram)");
+            gpuProgram = CECL_PROGRAM_WITH_BINARY(rContext, 1, subDevices, &srclen, &source_str, &status);
+            CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_BINARY failed.(gpuProgram)");
+        }else {
         // Create a CL program for sub-devices using the kernel source
-        subProgram = CECL_PROGRAM_WITH_SOURCE(rContext,
-                                               1,
-                                               (const char**)&source,
-                                               sourceSize,
-                                               &status);
-        CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_SOURCE failed.(subProgram)");
+            subProgram = CECL_PROGRAM_WITH_SOURCE(rContext,
+                                                1,
+                                                (const char**)&source,
+                                                sourceSize,
+                                                &status);
+            CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_SOURCE failed.(subProgram)");
 
-        // Create a CL program for GPU device using the kernel source
-        gpuProgram = CECL_PROGRAM_WITH_SOURCE(rContext,
-                                               1,
-                                               (const char**)&source,
-                                               sourceSize,
-                                               &status);
-        CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_SOURCE failed.(gpuProgram)");
+            // Create a CL program for GPU device using the kernel source
+            gpuProgram = CECL_PROGRAM_WITH_SOURCE(rContext,
+                                                1,
+                                                (const char**)&source,
+                                                sourceSize,
+                                                &status);
+            CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_SOURCE failed.(gpuProgram)");
+        }
     }
 
     // Get build options

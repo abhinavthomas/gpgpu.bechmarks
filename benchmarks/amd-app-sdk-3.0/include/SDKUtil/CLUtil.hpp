@@ -1,10 +1,10 @@
 /**********************************************************************
-Copyright ©2015 Advanced Micro Devices, Inc. All rights reserved.
+Copyright ï¿½2015 Advanced Micro Devices, Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-•   Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-•   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or
+ï¿½   Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ï¿½   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or
  other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -374,7 +374,6 @@ static int validateDeviceId(int deviceId, int deviceCount)
     return SDK_SUCCESS;
 }
 
-
 /**
  * generateBinaryImage
  * geenrate Binary for a kernel
@@ -439,6 +438,17 @@ static int generateBinaryImage(const bifData &binaryData)
                              NULL,
                              &status);
     CHECK_OPENCL_ERROR(status, "clCreateContextFromType failed.");
+    size_t devices_size;
+	status = clGetContextInfo(context, CL_CONTEXT_DEVICES, 0, NULL, &devices_size);
+	int numDevices = devices_size / sizeof(cl_device_id);
+	CHECK_OPENCL_ERROR(status, "clGetProgramInfo(CL_PROGRAM_NUM_DEVICES) failed.");
+    std::cout << "Number of devices found : " << numDevices << "\n\n";
+    cl_device_id *devices = (cl_device_id *)malloc( sizeof(cl_device_id) *
+                            numDevices );
+    CHECK_ALLOCATION(devices, "Failed to allocate host memory.(devices)");
+    /* grab the handles to all of the devices in the program. */
+    status = clGetContextInfo(context, CL_CONTEXT_DEVICES, devices_size, devices, NULL);
+	CHECK_OPENCL_ERROR(status, "clGetProgramInfo(CL_PROGRAM_DEVICES) failed.");
     /* create a CL program using the kernel source */
     SDKFile kernelFile;
     std::string kernelPath = getPath();
@@ -450,8 +460,14 @@ static int generateBinaryImage(const bifData &binaryData)
     }
     const char * source = kernelFile.source().c_str();
     size_t sourceSize[] = {strlen(source)};
-
-	cl_program program = CECL_PROGRAM_WITH_SOURCE(context, 1, &source, sourceSize, &status);
+    size_t srclen;
+	char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
+	const char *source_str = load_file(ptxName, &srclen);
+    cl_program program;
+	if (source_str)
+		program = CECL_PROGRAM_WITH_BINARY(context, 1, devices, &srclen, &source_str, &status);
+	else 
+	    program = CECL_PROGRAM_WITH_SOURCE(context, 1, &source, sourceSize, &status);
 	if(status != CL_SUCCESS) printf("Error in creating program\n");
 
     std::string flagsStr = std::string(binaryData.flagsStr.c_str());
@@ -487,26 +503,7 @@ static int generateBinaryImage(const bifData &binaryData)
       In such cases, binaries for eligible devices are geenrated and dumped
       even wen this function will return an error */
     //CHECK_OPENCL_ERROR(status, "clBuildProgram failed.");
-    size_t numDevices;
-    status = clGetProgramInfo(
-                 program,
-                 CL_PROGRAM_NUM_DEVICES,
-                 sizeof(numDevices),
-                 &numDevices,
-                 NULL );
-    CHECK_OPENCL_ERROR(status, "clGetProgramInfo(CL_PROGRAM_NUM_DEVICES) failed.");
-    std::cout << "Number of devices found : " << numDevices << "\n\n";
-    cl_device_id *devices = (cl_device_id *)malloc( sizeof(cl_device_id) *
-                            numDevices );
-    CHECK_ALLOCATION(devices, "Failed to allocate host memory.(devices)");
-    /* grab the handles to all of the devices in the program. */
-    status = clGetProgramInfo(
-                 program,
-                 CL_PROGRAM_DEVICES,
-                 sizeof(cl_device_id) * numDevices,
-                 devices,
-                 NULL );
-    CHECK_OPENCL_ERROR(status, "clGetProgramInfo(CL_PROGRAM_DEVICES) failed.");
+
     /* figure out the sizes of each of the binaries. */
     size_t *binarySizes = (size_t*)malloc( sizeof(size_t) * numDevices );
     CHECK_ALLOCATION(binarySizes, "Failed to allocate host memory.(binarySizes)");
@@ -866,7 +863,13 @@ static int buildOpenCLProgram(cl_program &program, const cl_context& context,
         }
         const char * source = kernelFile.source().c_str();
         size_t sourceSize[] = {strlen(source)};
-		program = CECL_PROGRAM_WITH_SOURCE(context, 1, &source, sourceSize, &status);
+        size_t srclen;
+		char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
+    	const char *source_str = (char *)load_file(ptxName, &srclen);
+        if (source_str)
+            program = CECL_PROGRAM_WITH_BINARY(context, 1, &buildData.devices[buildData.deviceId], &srclen, &source_str, &status);
+        else 
+           program = CECL_PROGRAM_WITH_SOURCE(context, 1, &source, sourceSize, &status);
 		if(status != CL_SUCCESS) printf("Error in creating program\n");
     }
     std::string flagsStr = std::string(buildData.flagsStr.c_str());

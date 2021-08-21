@@ -1,11 +1,11 @@
 #include <libcecl.h>
 /**********************************************************************
-Copyright ©2015 Advanced Micro Devices, Inc. All rights reserved.
+Copyright ï¿½2015 Advanced Micro Devices, Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-•   Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-•   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or
+ï¿½   Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ï¿½   Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or
  other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -88,13 +88,35 @@ int
 Device::createProgram(const char **source, const size_t *sourceSize)
 {
     // Create program with source
-    program = CECL_PROGRAM_WITH_SOURCE(context,
+    size_t devices_size;
+	int error = clGetContextInfo(context, CL_CONTEXT_DEVICES, 0, NULL, &devices_size);
+	if (error != CL_SUCCESS) 
+		return SDK_FAILURE;
+
+	int num_devices = devices_size / sizeof(cl_device_id);
+	//printf("# of devices %d\n", num_devices);
+
+	// Get the list of devices (previousely selected for the context)
+	cl_device_id* devices = (cl_device_id*)malloc(num_devices*sizeof(cl_device_id));
+	error = clGetContextInfo(context, CL_CONTEXT_DEVICES, devices_size, devices, NULL);
+	if (error != CL_SUCCESS) 
+		return SDK_FAILURE;
+
+    size_t srclen;
+	char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
+	const char *source_str = load_file(ptxName, &srclen);
+	if (source_str)
+		{program = CECL_PROGRAM_WITH_BINARY(context, 1, devices, &srclen, &source_str, NULL);
+    CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_BINARY failed.");
+        }
+	else 
+        {program = CECL_PROGRAM_WITH_SOURCE(context,
                                         1,
                                         source,
                                         sourceSize,
                                         &status);
     CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_SOURCE failed.");
-
+}
     return SDK_SUCCESS;
 }
 
@@ -391,12 +413,35 @@ int runMultiGPU()
     CHECK_OPENCL_ERROR(status, "CECL_CREATE_CONTEXT failed.");
 
     size_t sourceSize = strlen(source);
-    cl_program program  = CECL_PROGRAM_WITH_SOURCE(context,
+        size_t devices_size;
+	status = clGetContextInfo(context, CL_CONTEXT_DEVICES, 0, NULL, &devices_size);
+          CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_BINARY:clGetContextInfo failed.");
+  
+	int num_devices = devices_size / sizeof(cl_device_id);
+	//printf("# of devices %d\n", num_devices);
+
+	// Get the list of devices (previousely selected for the context)
+	cl_device_id* devices = (cl_device_id*)malloc(num_devices*sizeof(cl_device_id));
+	status = clGetContextInfo(context, CL_CONTEXT_DEVICES, devices_size, devices, NULL);
+    CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_BINARY:clGetContextInfo2 failed.");
+  
+    size_t srclen;
+	char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
+	const char *source_str = load_file(ptxName, &srclen);
+    cl_program program;
+	if (source_str)
+		{
+            program = CECL_PROGRAM_WITH_BINARY(context, 1, devices, &srclen, &source_str, &status);
+            CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_BINARY failed.");
+        }
+	else 
+{        program  = CECL_PROGRAM_WITH_SOURCE(context,
                           1,
                           &source,
                           (const size_t*)&sourceSize,
                           &status);
     CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_SOURCE failed.");
+    }
 
     char buildOptions[50];
     sprintf(buildOptions, "-D KERNEL_ITERATIONS=%d", KERNEL_ITERATIONS);
@@ -772,13 +817,23 @@ int runMultiDevice()
     CHECK_OPENCL_ERROR(status, "CECL_CREATE_CONTEXT failed.");
 
     size_t sourceSize = strlen(source);
-    cl_program program  = CECL_PROGRAM_WITH_SOURCE(context,
+    size_t srclen;
+	char *ptxName = "/home/abhinav/gpgpu.bechmarks/temp_src_code.ptx";
+	const char *source_str = load_file(ptxName, &srclen);
+    cl_program program;
+	if (source_str)
+		{
+            program = CECL_PROGRAM_WITH_BINARY(context, 1, devices, &srclen, &source_str, &status);
+            CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_BINARY failed.");
+        }
+	else 
+{       program  = CECL_PROGRAM_WITH_SOURCE(context,
                           1,
                           &source,
                           (const size_t*)&sourceSize,
                           &status);
     CHECK_OPENCL_ERROR(status, "CECL_PROGRAM_WITH_SOURCE failed.");
-
+}
     char buildOptions[50];
     sprintf(buildOptions, "-D KERNEL_ITERATIONS=%d", KERNEL_ITERATIONS);
 

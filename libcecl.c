@@ -25,6 +25,27 @@
 
 #define E_CL_FAILURE 101
 
+
+
+char * load_file(char *fname, size_t *len)
+{
+	FILE *fp = fopen(fname, "rb");
+	if (fp == NULL)
+		return NULL;
+
+	fseek(fp, 0, SEEK_END);
+	*len = ftell(fp);
+	rewind(fp);
+
+	unsigned char *buffer = (unsigned char *) malloc(*len * sizeof(unsigned char));
+	if (buffer == NULL)
+		return NULL;
+
+	fread(buffer, *len, 1, fp);
+	fclose(fp);
+	return buffer; 
+}
+
 /*
  * Wraps clGetEventProfilingInfo.
  *
