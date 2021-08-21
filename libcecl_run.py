@@ -63,24 +63,25 @@ def execute(command, clenv, os_env=None, record_outputs=True):
         expected_devtype=clenv.device_type,
         expected_device_name=clenv.device_name,
     )
-    fname = config.BASE_PATH / "temp_src_code.cl"
-    fname_out = config.BASE_PATH / "temp_src_code.ll"
-    with open(fname, 'w') as fsrc:
-        fsrc.write(''.join(program_sources))
-    # Generate the command line for compiling the kernel
-    cmd = build_cmd(fname, build_options)
-    l_runs = []
-    try:
-        # Run and trigger an exception if it is unsuccessful
-
-        subprocess.run(cmd, check=True)
-        with open(fname_out, 'r') as fp:
-            ir = fp.read()
-        variations = opt_flags.main()
-    except subprocess.CalledProcessError as e:
-        print("error", cmd, e)
-        raise e
+    ir = ''
     if len(kernel_invocations) > 0:
+        fname = config.BASE_PATH / "temp_src_code.cl"
+        fname_out = config.BASE_PATH / "temp_src_code.ll"
+        with open(fname, 'w') as fsrc:
+            fsrc.write(''.join(program_sources))
+        # Generate the command line for compiling the kernel
+        cmd = build_cmd(fname, build_options)
+        l_runs = []
+        try:
+            # Run and trigger an exception if it is unsuccessful
+
+            subprocess.run(cmd, check=True)
+            with open(fname_out, 'r') as fp:
+                ir = fp.read()
+            variations = opt_flags.main()
+        except subprocess.CalledProcessError as e:
+            print("error", cmd, e)
+            raise e
         for v, combo in variations.items():
             passes_txt = ' '.join([f'--{p}' for p in combo])
             if fname_ptx.exists():
