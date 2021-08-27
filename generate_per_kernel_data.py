@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with CLgen.  If not, see <http://www.gnu.org/licenses/>.
 #
+import json
 import pathlib
 import re
 import shutil
@@ -24,35 +25,26 @@ import subprocess
 import tempfile
 from multiprocessing import Pool
 from typing import List
-import json
+
 import pandas as pd
 from google.protobuf.json_format import MessageToDict
 
 import config
 import gpgpu_pb2
 
-CLANG_BINARY = '/hdd/abhinav/llvm-project/build/bin/clang'
-LLVM_EXTRACT_BINARY = '/hdd/abhinav/llvm-project/build/bin/llvm-extract'
-
-_EXT = '.ll'  # change to '.ll' for text format
-_CLANG_BIN = '/hdd/abhinav/llvm-project/build/bin/clang'
+IR2VEC_BIN = '/home/abhinav/IR2Vec/build/bin/ir2vec'
+_EXT = '.vec'  # The extension for generated flow aware vectors
+SEED_EMBEDDING_PATH = "/home/abhinav/IR2Vec/vocabulary/seedEmbeddingVocab-300-llvm12.txt"
 
 
 def output_file(fname):
     return fname.with_suffix(_EXT)
 
 
-def build_cmd(fname, build_options):
+def build_cmd(fname):
     fname_out = output_file(fname)
-    ext_type = '-S' if _EXT == '.ll' else ''
-    cmd = f'{_CLANG_BIN} -c -x cl -cl-std=CL2.0 -emit-llvm {ext_type} -Xclang -finclude-default-header -D__OPENCL_VERSION__ {build_options} {fname} -o {fname_out}'
-    return cmd.split()+["-target", "nvptx64-nvidia-nvcl"]
-
-
-def build_cmd_ext(ll_file, funcname, outfilename):
-    ext_type = '-S' if _EXT == '.ll' else ''
-    cmd = f'{LLVM_EXTRACT_BINARY} {ll_file} -func {funcname} {ext_type} -o {outfilename}'
-    return cmd.split()
+    cmd = f'{IR2VEC_BIN} -fa -vocab {SEED_EMBEDDING_PATH} -level p -o {fname_out} {fname}'
+    return cmd.split(), fname_out
 
 
 def generate_corpus():
@@ -65,63 +57,79 @@ def generate_corpus():
     with tempfile.TemporaryDirectory(prefix='opencl_build_exps') as d:
         idx = 0
         basepath = pathlib.Path(d)
-        headers = pathlib.Path('headers')
-        for fname in headers.glob('*.h'):
-            shutil.copy(fname, basepath)
         benchmarks = []
         for path in paths:
             try:
+                print(f"Trying {path}")
                 with open(path, 'rb') as fp:
                     benchmark_results.ParseFromString(fp.read())
                     benchmark_result = MessageToDict(benchmark_results)
-                    source = '\n'.join(benchmark_result.get(
-                        'run').get('openclProgramSource'))
-                    build_options = ' '.join(benchmark_result.get(
+                    source = benchmark_result.get('run').get('ir')
+                    build_options = tuple(benchmark_result.get(
                         'run').get('openclBuildOptions'))
                     bmark = benchmark_result.get('benchmarkName')
 
-                    # Write the source to a file in the temp directory
-                    fname = basepath / f'{bmark}.{idx}.cl'
+                    # Write the IR to a file in the temp directory
+                    fname = basepath / f'{bmark}.{idx}.ll'
                     with open(fname, 'w') as fsrc:
                         fsrc.write(source)
                     # Generate the command line for compiling the kernel
-                    cmd = build_cmd(fname, build_options)
+                    cmd, fname_out = build_cmd(fname)
+                    print(f"Generating vectors {fname} to {fname_out}")
                     try:
                         # Run and trigger an exception if it is unsuccessful
                         p = subprocess.run(cmd, check=True)
-                        # Read the output file and report its size
-                        fname_out = output_file(fname)
                     except subprocess.CalledProcessError as e:
                         # print("error",bmark,e)
                         p.stderr
                         raise e
+                    else:
+                        # if success read the vector from the file
+                        df = pd.read_csv(fname_out, sep='\t')
+                        irvec = df.columns.to_list()[:300]
 
                     for invocation in benchmark_result.get('run').get('kernelInvocation'):
                         kernel_name = invocation.get('kernelName')
-                        exct_output_file = basepath / \
-                            f'{bmark}.{idx}.{kernel_name}.ll'
-                        cmd_ext = build_cmd_ext(
-                            fname_out, kernel_name, exct_output_file)
-                        try:
-                            # Run and trigger an exception if it is unsuccessful
-                            p = subprocess.run(cmd_ext, check=True)
-                            print(exct_output_file)
-                            with open(exct_output_file, 'r') as fin:
-                                ir = fin.read()
-                                size = len(fin.read())
-                                print(f'{exct_output_file}:\t {size}')
-                        except subprocess.CalledProcessError as e:
-                            # print("error",bmark,e)
-                            p.stderr
-                            raise e
                         bench_mark = {**invocation, 'build_options': build_options,
-                                      "ir":  ir, 'source': source,
+                                      "ir": irvec, 'opt': (), "kernelname": kernel_name,
                                       'hostname': benchmark_result.get('hostname'),
                                       'deviceName': benchmark_result.get('deviceName'),
                                       'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
-                                      'benchmarkName': bmark,
-                                      'datasetName': benchmark_result.get('datasetName')}
+                                      'benchmarkName': bmark, 'datasetName': benchmark_result.get('datasetName')}
                         benchmarks.append(bench_mark)
+                    # Iterate through opt runs and exctract the vectors
+                    for opt_run in benchmark_result.get('run').get('optRuns'):
+                        invocations = opt_run.get('kernelInvocation')
+                        if not invocations:
+                            continue
+                        ir = opt_run.get('ir')
+                        # Write the IR to a file in the temp directory
+                        with open(fname, 'w') as fsrc:
+                            fsrc.write(ir)
+                        try:
+                            # Run and trigger an exception if it is unsuccessful
+                            p = subprocess.run(cmd, check=True)
+                        except subprocess.CalledProcessError as e:
+                            # print("error",bmark,e)
+                            print(p.stderr)
+                            raise e
+                        else:
+                            # if success read the vector from the file
+                            df = pd.read_csv(fname_out, sep='\t')
+                            irvec = tuple(df.columns.to_list()[:300])
+
+                        for invocation in invocations:
+                            kernel_name = invocation.get('kernelName')
+                            bench_mark = {**invocation,
+                                          'build_options': build_options,
+                                          'ir':  irvec, "kernelname": kernel_name,
+                                          'opt': tuple(opt_run.get('optPasses').split()) if opt_run.get('optPasses') else (),
+                                          'hostname': benchmark_result.get('hostname'),
+                                          'deviceName': benchmark_result.get('deviceName'),
+                                          'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
+                                          'benchmarkName': bmark,
+                                          'datasetName': benchmark_result.get('datasetName')}
+                            benchmarks.append(bench_mark)
             except Exception as e:
                 failed.append(str(path))
             else:
@@ -133,4 +141,4 @@ def generate_corpus():
 
 if __name__ == '__main__':
     df = pd.DataFrame(generate_corpus())
-    df.to_json('ir_ds.json', 'records')
+    df.to_parquet('ir_ds.pq')

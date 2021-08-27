@@ -11,9 +11,9 @@ import libcecl_pb2
 LIBCECL_SO = config.BASE_PATH / 'libcecl.so'
 LIBCECL_HEADER = config.BASE_PATH / 'libcecl.h'
 
-OPT = pathlib.Path('/hdd/abhinav/llvm-project/build/bin/opt')
-LLC = pathlib.Path('/hdd/abhinav/llvm-project/build/bin/llc')
-LLL = pathlib.Path('/hdd/abhinav/llvm-project/build/bin/llvm-link')
+OPT = pathlib.Path('/hdd/llvm/source/llvm-project/build/bin/opt')
+LLC = pathlib.Path('/hdd/llvm/source/llvm-project/build/bin/llc')
+LLL = pathlib.Path('/hdd/llvm/source/llvm-project/build/bin/llvm-link')
 
 def run_env(clenv, os_env=None):
     """Return an execution environment for a libcecl benchmark."""
@@ -27,11 +27,11 @@ def run_env(clenv, os_env=None):
     return env
 
 
-CLANG_BINARY = '/hdd/abhinav/llvm-project/build/bin/clang'
-LLVM_EXTRACT_BINARY = '/hdd/abhinav/llvm-project/build/bin/llvm-extract'
+CLANG_BINARY = '/hdd/llvm/source/llvm-project/build/bin/clang'
+LLVM_EXTRACT_BINARY = '/hdd/llvm/source/llvm-project/build/bin/llvm-extract'
 
 _EXT = '.ll'  # change to '.ll' for text format
-_CLANG_BIN = '/hdd/abhinav/llvm-project/build/bin/clang'
+_CLANG_BIN = '/hdd/llvm/source/llvm-project/build/bin/clang'
 
 
 def output_file(fname):

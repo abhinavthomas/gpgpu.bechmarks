@@ -134,3 +134,9 @@ kernel_corpus.ipynb
 generate_per_kernel_data.py
 ir_ds.json
 .vscode/*
+logs/*
+cyclicCount_test.out
+ir_ds.pq
+missCount_test.out
+temp_src.ll
+test.out

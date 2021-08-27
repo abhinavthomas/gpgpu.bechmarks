@@ -8,9 +8,9 @@ from pathlib import Path
 import hashlib
 import config
 
-OPT = Path('/hdd/abhinav/llvm-project/build/bin/opt')
-LLC = Path('/hdd/abhinav/llvm-project/build/bin/llc')
-LLL = Path('/hdd/abhinav/llvm-project/build/bin/llvm-link')
+OPT = Path('/hdd/llvm/source/llvm-project/build/bin/opt')
+LLC = Path('/hdd/llvm/source/llvm-project/build/bin/llc')
+LLL = Path('/hdd/llvm/source/llvm-project/build/bin/llvm-link')
 
 PASSES_FILE = config.BASE_PATH / 'passes.txt'  # Where the valid passes will be saved
 COMBOS_FILE = config.BASE_PATH / 'passes_combos.txt'
@@ -110,7 +110,7 @@ class Version(object):
     def _calculate_hash(self):
         #print(f"Started calculating hash...")
         hash_md5 = hashlib.md5()
-        with open(TESTOUT_PTX, 'rb') as f:
+        with open(TESTOUT_LL, 'rb') as f:
             for chunk in iter(lambda: f.read(4096), b""):
                 hash_md5.update(chunk)
         self.md5hash = hash_md5.hexdigest()
