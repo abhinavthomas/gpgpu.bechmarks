@@ -32,9 +32,9 @@ from google.protobuf.json_format import MessageToDict
 import config
 import gpgpu_pb2
 
-IR2VEC_BIN = '/home/abhinav/IR2Vec/build/bin/ir2vec'
+IR2VEC_BIN = '/hdd/abhinav/IR2Vec/build/bin/ir2vec'
 _EXT = '.vec'  # The extension for generated flow aware vectors
-SEED_EMBEDDING_PATH = "/home/abhinav/IR2Vec/vocabulary/seedEmbeddingVocab-300-llvm12.txt"
+SEED_EMBEDDING_PATH = "/hdd/abhinav/IR2Vec/vocabulary/seedEmbeddingVocab-300-llvm12.txt"
 
 
 def output_file(fname):
@@ -131,6 +131,7 @@ def generate_corpus():
                                           'datasetName': benchmark_result.get('datasetName')}
                             benchmarks.append(bench_mark)
             except Exception as e:
+                print(e)
                 failed.append(str(path))
             else:
                 sucess += 1
