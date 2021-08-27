@@ -32,9 +32,9 @@ from google.protobuf.json_format import MessageToDict
 import config
 import gpgpu_pb2
 
-IR2VEC_BIN = '/home/abhinav/IR2Vec/build/bin/ir2vec'
+IR2VEC_BIN = '/hdd/abhinav/IR2Vec/build/bin/ir2vec'
 _EXT = '.vec'  # The extension for generated flow aware vectors
-SEED_EMBEDDING_PATH = "/home/abhinav/IR2Vec/vocabulary/seedEmbeddingVocab-300-llvm12.txt"
+SEED_EMBEDDING_PATH = "/hdd/abhinav/IR2Vec/vocabulary/seedEmbeddingVocab-300-llvm12.txt"
 
 
 def output_file(fname):
@@ -65,7 +65,7 @@ def generate_corpus():
                     benchmark_results.ParseFromString(fp.read())
                     benchmark_result = MessageToDict(benchmark_results)
                     source = benchmark_result.get('run').get('ir')
-                    build_options = tuple(benchmark_result.get(
+                    build_options = list(benchmark_result.get(
                         'run').get('openclBuildOptions'))
                     bmark = benchmark_result.get('benchmarkName')
 
@@ -91,7 +91,7 @@ def generate_corpus():
                     for invocation in benchmark_result.get('run').get('kernelInvocation'):
                         kernel_name = invocation.get('kernelName')
                         bench_mark = {**invocation, 'build_options': build_options,
-                                      "ir": irvec, 'opt': (), "kernelname": kernel_name,
+                                      "ir": irvec, 'opt': [], "kernelname": kernel_name,
                                       'hostname': benchmark_result.get('hostname'),
                                       'deviceName': benchmark_result.get('deviceName'),
                                       'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
@@ -116,14 +116,14 @@ def generate_corpus():
                         else:
                             # if success read the vector from the file
                             df = pd.read_csv(fname_out, sep='\t')
-                            irvec = tuple(df.columns.to_list()[:300])
+                            irvec = df.columns.to_list()[:300]
 
                         for invocation in invocations:
                             kernel_name = invocation.get('kernelName')
                             bench_mark = {**invocation,
                                           'build_options': build_options,
                                           'ir':  irvec, "kernelname": kernel_name,
-                                          'opt': tuple(opt_run.get('optPasses').split()) if opt_run.get('optPasses') else (),
+                                          'opt': opt_run.get('optPasses').split() if opt_run.get('optPasses') else [],
                                           'hostname': benchmark_result.get('hostname'),
                                           'deviceName': benchmark_result.get('deviceName'),
                                           'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
