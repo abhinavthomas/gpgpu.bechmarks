@@ -98,29 +98,30 @@ def generate_corpus():
                                       'benchmarkName': bmark, 'datasetName': benchmark_result.get('datasetName')}
                         benchmarks.append(bench_mark)
                     # Iterate through opt runs and exctract the vectors
-                    for opt_run in benchmark_result.get('run').get('optRuns'):
-                        invocations = opt_run.get('kernelInvocation')
-                        if not invocations:
-                            continue
-                        ir = opt_run.get('ir')
-                        # Write the IR to a file in the temp directory
-                        with open(fname, 'w') as fsrc:
-                            fsrc.write(ir)
-                        try:
-                            # Run and trigger an exception if it is unsuccessful
-                            p = subprocess.run(cmd, check=True)
-                        except subprocess.CalledProcessError as e:
-                            # print("error",bmark,e)
-                            print(p.stderr)
-                            raise e
-                        else:
-                            # if success read the vector from the file
-                            df = pd.read_csv(fname_out, sep='\t')
-                            irvec = df.columns.to_list()[:300]
+                    try:
+                        for opt_run in benchmark_result.get('run').get('optRuns'):
+                            invocations = opt_run.get('kernelInvocation')
+                            if not invocations:
+                                continue
+                            ir = opt_run.get('ir')
+                            # Write the IR to a file in the temp directory
+                            with open(fname, 'w') as fsrc:
+                                fsrc.write(ir)
+                            try:
+                                # Run and trigger an exception if it is unsuccessful
+                                p = subprocess.run(cmd, check=True)
+                            except subprocess.CalledProcessError as e:
+                                # print("error",bmark,e)
+                                print(p.stderr)
+                                raise e
+                            else:
+                                # if success read the vector from the file
+                                df = pd.read_csv(fname_out, sep='\t')
+                                irvec = list(map(float,df.columns.to_list()[:300]))
 
-                        for invocation in invocations:
-                            kernel_name = invocation.get('kernelName')
-                            bench_mark = {**invocation,
+                            for invocation in invocations:
+                                kernel_name = invocation.get('kernelName')
+                                bench_mark = {**invocation,
                                           'build_options': build_options,
                                           'ir':  irvec, "kernelname": kernel_name,
                                           'opt': opt_run.get('optPasses').split() if opt_run.get('optPasses') else [],
@@ -129,8 +130,12 @@ def generate_corpus():
                                           'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
                                           'benchmarkName': bmark,
                                           'datasetName': benchmark_result.get('datasetName')}
-                            benchmarks.append(bench_mark)
+                                benchmarks.append(bench_mark)
+                    except Exception as e:
+                        print(e)
+                        failed.append(str(path)+str(opt_run.get('optPasses'))) 
             except Exception as e:
+                print(e)
                 failed.append(str(path))
             else:
                 sucess += 1
