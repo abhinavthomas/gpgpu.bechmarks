@@ -58,9 +58,9 @@ def generate_corpus():
         idx = 0
         basepath = pathlib.Path(d)
         benchmarks = []
-        for path in paths:
+        for i, path in enumerate(paths):
             try:
-                print(f"Trying {path}")
+                print(f"Trying {path}, {i+1}/{len(paths)}")
                 with open(path, 'rb') as fp:
                     benchmark_results.ParseFromString(fp.read())
                     benchmark_result = MessageToDict(benchmark_results)
@@ -85,8 +85,9 @@ def generate_corpus():
                         raise e
                     else:
                         # if success read the vector from the file
-                        df = pd.read_csv(fname_out, sep='\t')
-                        irvec = df.columns.to_list()[:300]
+                        with open(fname_out) as fp:
+                            irvec = list(
+                                map(float, fp.read().split('\t')[:300]))
 
                     for invocation in benchmark_result.get('run').get('kernelInvocation'):
                         kernel_name = invocation.get('kernelName')
@@ -116,34 +117,39 @@ def generate_corpus():
                                 raise e
                             else:
                                 # if success read the vector from the file
-                                df = pd.read_csv(fname_out, sep='\t')
-                                irvec = list(map(float,df.columns.to_list()[:300]))
+                                with open(fname_out) as fp:
+                                    irvec = list(
+                                        map(float, fp.read().split('\t')[:300]))
 
                             for invocation in invocations:
                                 kernel_name = invocation.get('kernelName')
                                 bench_mark = {**invocation,
-                                          'build_options': build_options,
-                                          'ir':  irvec, "kernelname": kernel_name,
-                                          'opt': opt_run.get('optPasses').split() if opt_run.get('optPasses') else [],
-                                          'hostname': benchmark_result.get('hostname'),
-                                          'deviceName': benchmark_result.get('deviceName'),
-                                          'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
-                                          'benchmarkName': bmark,
-                                          'datasetName': benchmark_result.get('datasetName')}
+                                              'build_options': build_options,
+                                              'ir':  irvec, "kernelname": kernel_name,
+                                              'opt': opt_run.get('optPasses').split() if opt_run.get('optPasses') else [],
+                                              'hostname': benchmark_result.get('hostname'),
+                                              'deviceName': benchmark_result.get('deviceName'),
+                                              'benchmarkSuite': benchmark_result.get('benchmarkSuite'),
+                                              'benchmarkName': bmark,
+                                              'datasetName': benchmark_result.get('datasetName')}
                                 benchmarks.append(bench_mark)
                     except Exception as e:
                         print(e)
-                        failed.append(str(path)+str(opt_run.get('optPasses'))) 
+                        failed.append(str(path)+str(opt_run.get('optPasses')))
             except Exception as e:
                 print(e)
                 failed.append(str(path))
             else:
                 sucess += 1
+                if sucess % 50 == 0:
+                    yield benchmarks
+                    benchmarks = []
+
     print(f"Total {sucess} sucess out of {len(paths)}")
     print(f"{len(failed)} items failed. And they are: ")
-    return benchmarks
 
 
 if __name__ == '__main__':
-    df = pd.DataFrame(generate_corpus())
-    df.to_parquet('ir_ds.pq')
+    for i, d in enumerate(generate_corpus()):
+        df = pd.DataFrame(d)
+        df.to_parquet(f'data/ir_ds.{i}.pq')
