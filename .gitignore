@@ -136,8 +136,10 @@ ir_ds.json
 .vscode/*
 logs/*
 cyclicCount_test.out
-ir_ds.pq
 missCount_test.out
-temp_src.ll
+temp_src*
 test.out
 logs.tar.gz
+lightning_logs/*
+*.pq
+*.ll
