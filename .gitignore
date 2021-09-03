@@ -143,3 +143,4 @@ logs.tar.gz
 lightning_logs/*
 *.pq
 *.ll
+data/*
